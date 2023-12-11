@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">HintHunt</string>
+
+    <string name="fragment_home_app_name">HintHunt</string>
+    <string name="fragment_home_create_game">Create game</string>
+    <string name="fragment_home_connect_game">Connect game</string>
+    <string name="fragment_home_rules">Rules</string>
+    <string name="fragment_home_settings">Settings</string>
+    <string name="fragment_home_authors">Authors</string>
+
+    <string name="fragment_settings_title">Settings</string>
+    <string name="fragment_settings_color_scheme">Color scheme</string>
+    <string name="fragment_settings_color_scheme_system_chip">System</string>
+    <string name="fragment_settings_color_scheme_light_chip">Light</string>
+    <string name="fragment_settings_color_scheme_dark_chip">Dark</string>
+    <string name="fragment_settings_language">Language</string>
+    <string name="fragment_settings_language_russian">Russian</string>
+    <string name="fragment_settings_language_english">English</string>
+    <string name="fragment_settings_support_developers">Support developers</string>
+
+    <string name="fragment_create_game_title">Create game</string>
+    <string name="fragment_create_game_board_size">Game board size</string>
+    <string name="fragment_create_game_board_size_18">18</string>
+    <string name="fragment_create_game_board_size_21">21</string>
+    <string name="fragment_create_game_board_size_24">24</string>
+    <string name="fragment_create_game_words_complexity_easy">🤍</string>
+    <string name="fragment_create_game_words_complexity_medium">🤍 🤍</string>
+    <string name="fragment_create_game_words_complexity_hard">🤍 🤍 🤍</string>
+    <string name="fragment_create_game_complexity_of_words">Complexity of words</string>
+    <string name="fragment_create_game_colors_of_teams">Colors of teams</string>
+    <string name="fragment_create_game_wild_berries">Wild berries</string>
+    <string name="fragment_create_game_mustard_field">Mustard field</string>
+    <string name="fragment_create_game_carrot_freshness">Carrot freshness</string>
+    <string name="fragment_create_game_noble_saffron">Noble Saffron</string>
+    <string name="fragment_create_game_lilac_at_midnight">Lilac at midnight</string>
+    <string name="fragment_create_game_cranberries_in_moss">Cranberries in moss</string>
+    <string name="fragment_create_game_create">Create</string>
+
+    <string name="fragment_player_menu_information">Info</string>
+    <string name="fragment_player_menu_home">Home</string>
+    <string name="fragment_player_menu_turn">Turn</string>
+    <string name="fragment_player_turn">Turn</string>
+
+    <string name="fragment_leader_menu_show_cards">Show cards</string>
+    <string name="fragment_leader_menu_home">Home</string>
+    <string name="fragment_leader_menu_mix_cards">Mix cards</string>
+    <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
+</resources>
