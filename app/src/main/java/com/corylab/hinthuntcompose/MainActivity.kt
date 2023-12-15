@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.corylab.hinthuntcompose.screens.Home
+import com.corylab.hinthuntcompose.screens.Settings
 import com.corylab.hinthuntcompose.ui.theme.HintHuntComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HintHuntComposeTheme {
-                Home()
+                Settings()
             }
         }
     }

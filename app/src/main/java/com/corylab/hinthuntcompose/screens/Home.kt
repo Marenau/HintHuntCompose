@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,11 +29,6 @@ import com.corylab.hinthuntcompose.ui.theme.MainText
 @Preview
 @Composable
 fun Home() {
-    val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = colorResource(id = R.color.dark_gray),
-        contentColor = colorResource(id = R.color.white)
-    )
-    val cornerShape = RoundedCornerShape(6.dp)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +40,8 @@ fun Home() {
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp)
+                .wrapContentSize()
+                .padding(top = 8.dp)
         )
 
         Text(
@@ -54,69 +52,58 @@ fun Home() {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Button(
-            onClick = { /* Handle create game click */ },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .width(250.dp)
-                .padding(top = 16.dp),
-            shape = cornerShape,
-            colors = buttonColors
-        ) {
-            Text(text = stringResource(id = R.string.fragment_home_create_game), style = MainText)
-        }
+        val modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .width(250.dp)
+            .padding(top = 16.dp)
 
-        Button(
-            onClick = { /* Handle connect game click */ },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .width(250.dp)
-                .padding(top = 8.dp),
-            shape = cornerShape,
-            colors = buttonColors
-        ) {
-            Text(text = stringResource(id = R.string.fragment_home_connect_game), style = MainText)
-        }
-
-        Button(
-            onClick = { /* Handle rules click */ },
-            modifier = Modifier
-                .width(250.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 8.dp),
-            shape = cornerShape,
-            colors = buttonColors
-        ) {
-            Text(text = stringResource(id = R.string.fragment_home_rules), style = MainText)
-        }
-
-        Button(
-            onClick = { /* Handle settings click */ },
-            modifier = Modifier
-                .width(250.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 8.dp),
-            shape = cornerShape,
-            colors = buttonColors
-        ) {
-            Text(text = stringResource(id = R.string.fragment_home_settings), style = MainText)
-        }
+        ButtonWithText(
+            modifier = modifier,
+            text = stringResource(id = R.string.fragment_home_create_game)
+        )
+        ButtonWithText(
+            modifier = modifier,
+            text = stringResource(id = R.string.fragment_home_connect_game)
+        )
+        ButtonWithText(
+            modifier = modifier,
+            text = stringResource(id = R.string.fragment_home_rules)
+        )
+        ButtonWithText(
+            modifier = modifier,
+            text = stringResource(id = R.string.fragment_home_settings)
+        )
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Button(
-                onClick = { /* Handle authors click */ },
+            ButtonWithText(
                 modifier = Modifier
                     .width(250.dp)
-                    .align(Alignment.BottomCenter)
-                    .padding(top = 8.dp),
-                shape = cornerShape,
-                colors = buttonColors
-            ) {
-                Text(text = stringResource(id = R.string.fragment_home_authors), style = MainText)
-            }
+                    .align(Alignment.BottomCenter),
+                text = stringResource(id = R.string.fragment_home_authors)
+            )
         }
+    }
+}
+
+@Composable
+fun ButtonWithText(
+    modifier: Modifier,
+    text: String
+) {
+    val buttonColors = ButtonDefaults.buttonColors(
+        containerColor = colorResource(id = R.color.light_gray),
+        contentColor = colorResource(id = R.color.white)
+    )
+    val cornerShape = RoundedCornerShape(6.dp)
+    Button(
+        onClick = {},
+        modifier = modifier,
+        shape = cornerShape,
+        colors = buttonColors
+    ) {
+        Text(text = text, style = MainText)
     }
 }
