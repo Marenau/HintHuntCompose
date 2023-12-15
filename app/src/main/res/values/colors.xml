@@ -5,4 +5,17 @@
     <color name="background_color">#343434</color>
     <color name="light_gray">#626262</color>
     <color name="dark_gray">#4C4C4C</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="wild_berries_color1">#FF5E5B</color>
+    <color name="wild_berries_color2">#58A6CB</color>
+    <color name="mustard_field_color1">#B4A414</color>
+    <color name="mustard_field_color2">#27ABA9</color>
+    <color name="carrot_freshness_color1">#61AD6E</color>
+    <color name="carrot_freshness_color2">#FF8D45</color>
+    <color name="noble_saffron_color1">#56599E</color>
+    <color name="noble_saffron_color2">#CF8A8A</color>
+    <color name="lilac_at_midnight_color1">#7C3E73</color>
+    <color name="lilac_at_midnight_color2">#476EBC</color>
+    <color name="cranberries_in_moss_color1">#356F40</color>
+    <color name="cranberries_in_moss_color2">#BC4749</color>
 </resources>
