@@ -21,8 +21,8 @@
     <string name="fragment_create_game_title">Create game</string>
     <string name="fragment_create_game_board_size">Game board size</string>
     <string name="fragment_create_game_board_size_18">18</string>
-    <string name="fragment_create_game_board_size_21">21</string>
-    <string name="fragment_create_game_board_size_24">24</string>
+    <string name="fragment_create_game_board_size_21">24</string>
+    <string name="fragment_create_game_board_size_24">30</string>
     <string name="fragment_create_game_words_complexity_easy">🤍</string>
     <string name="fragment_create_game_words_complexity_medium">🤍 🤍</string>
     <string name="fragment_create_game_words_complexity_hard">🤍 🤍 🤍</string>
@@ -41,6 +41,7 @@
     <string name="fragment_player_menu_turn">Turn</string>
     <string name="fragment_player_turn">Turn</string>
 
+    <string name="fragment_leader_menu_turn">Turn</string>
     <string name="fragment_leader_menu_show_cards">Show cards</string>
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
