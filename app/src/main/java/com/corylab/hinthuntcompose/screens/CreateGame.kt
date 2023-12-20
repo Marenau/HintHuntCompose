@@ -3,6 +3,7 @@ package com.corylab.hinthuntcompose.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,8 +22,10 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -210,76 +213,80 @@ fun CreateGame() {
                 Brush.horizontalGradient(listOf(colorResource(id = R.color.lilac_at_midnight_color1), colorResource(R.color.lilac_at_midnight_color2))),
                 Brush.horizontalGradient(listOf(colorResource(id = R.color.cranberries_in_moss_color1), colorResource(R.color.cranberries_in_moss_color2)))
             )
-            val (selectedOption, onOptionSelected) = remember { mutableStateOf(teamsColors[0]) }
-                Row(
+
+
+            var selectedOption by remember {
+                mutableStateOf(teamsColors[0])
+            }
+            val onSelectionChange = { text: String ->
+                selectedOption = text
+            }
+
+            Row(
                     Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp)
                 ) {
                     var index = 0
                     teamsColors.take(3).forEach { text ->
-                        Button(
-                            onClick = {},
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            shape = RoundedCornerShape(6.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.transparent)),
-                            contentPadding = PaddingValues(0.dp,0.dp,0.dp,0.dp)
-                        ) {
                             Box (modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
                                 .clip(shape = RoundedCornerShape(6.dp))
-                                .fillMaxWidth()
+                                .clickable {
+                                    onSelectionChange(text)
+                                }
                                 .background(
                                     brush = brushes[index],
-                                    shape = RoundedCornerShape(6.dp))
-                                .padding(horizontal = 8.dp, vertical = 1.dp))
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .border(
+                                    if (text == selectedOption) BorderStroke(1.dp, Color.White) else BorderStroke(1.dp, Color.Transparent),RoundedCornerShape(6.dp))
+
+                            )
                             {
-                                Text(text = text, style = MainText, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                                Text(text = text, style = MainText, textAlign = TextAlign.Center, modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                                    .fillMaxWidth(),
                                     overflow = TextOverflow.Ellipsis,
                                     softWrap= false,
-                                    fontSize = 14.sp)
+                                    fontSize = 12.sp)
                             }
-                        }
                         index+=1
                     }
                 }
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp)
+                        .padding(start = 8.dp, top = 8.dp)
                         .selectableGroup()
                 ) {
                         var index = 3
                         teamsColors.takeLast(3).forEach { text ->
-                            Button(
-                                onClick = {},
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(end = 8.dp),
-                                shape = RoundedCornerShape(6.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.transparent)),
-                                contentPadding = PaddingValues(0.dp,0.dp,0.dp,0.dp),
-                                border = BorderStroke(1.dp, Color.White)
-                            ) {
-                                Box (modifier = Modifier
-                                    .clip(shape = RoundedCornerShape(6.dp))
-                                    .fillMaxWidth()
-                                    .background(
-                                        brush = brushes[index],
-                                        shape = RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 8.dp, vertical = 1.dp)
-
+                            Box (modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp, bottom = 8.dp)
+                                .clip(shape = RoundedCornerShape(6.dp))
+                                .clickable {
+                                    onSelectionChange(text)
+                                }
+                                .background(
+                                    brush = brushes[index],
+                                    shape = RoundedCornerShape(6.dp)
                                 )
+                                .border(
+                                    if (text == selectedOption) BorderStroke(1.dp, Color.White) else BorderStroke(1.dp, Color.Transparent),RoundedCornerShape(6.dp))
+                            )
                                 {
-                                    Text(text = text, style = MainText, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                                    Text(text = text, style = MainText, textAlign = TextAlign.Center, modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                                        .fillMaxWidth(),
                                         overflow = TextOverflow.Ellipsis,
                                         softWrap= false,
-                                        fontSize = 14.sp)
+                                        fontSize = 12.sp)
                                 }
-                            }
                             index+=1
-                    }
+                        }
                 }
 
 
