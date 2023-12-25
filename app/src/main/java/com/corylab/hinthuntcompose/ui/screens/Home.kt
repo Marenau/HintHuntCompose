@@ -1,4 +1,4 @@
-package com.corylab.hinthuntcompose.screens
+package com.corylab.hinthuntcompose.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

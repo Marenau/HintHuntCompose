@@ -10,14 +10,14 @@ class HintHunt : Application() {
         context = applicationContext
         repository = Repository(applicationContext)
 
-        //TODO
         val sharedPreferences = getSharedPreferences(
             "appPrefs",
             Context.MODE_PRIVATE
         )
-
-        sharedPreferences.edit().putInt("size", 18).apply()
-        sharedPreferences.edit().putInt("complexity", 1).apply()
+        if (!sharedPreferences.contains("_first_launch")) {
+            sharedPreferences.edit().putInt("size", 18).putInt("complexity", 0).putInt("teams_color", 0).apply()
+            sharedPreferences.edit().putBoolean("_first_launch", false).apply()
+        }
     }
 
     companion object {

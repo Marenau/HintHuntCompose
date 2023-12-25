@@ -26,8 +26,8 @@ class Repository(application: Context) {
 
     fun getWords(): List<String> {
         val words: List<String> = when (sharedPreferencesSource.getInt("complexity")) {
-            1 -> getEasyWords()
-            2 -> getMediumWords()
+            0 -> getEasyWords()
+            1 -> getMediumWords()
             else -> getHardWords()
         }
         return words

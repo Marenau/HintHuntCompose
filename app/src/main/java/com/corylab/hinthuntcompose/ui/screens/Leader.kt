@@ -1,12 +1,13 @@
-package com.corylab.hinthuntcompose.screens
+package com.corylab.hinthuntcompose.ui.screens
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,12 +26,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
@@ -48,14 +49,19 @@ import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.ui.theme.DarkGray
 import com.corylab.hinthuntcompose.ui.theme.MainText
+import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
 import java.util.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun Leader(navController: NavController, mViewModel: WordViewModel) {
+fun Leader(
+    navController: NavController,
+    wViewModel: WordViewModel,
+    spViewModel: SharedPreferencesViewModel
+) {
     var words = remember {
-        mViewModel.getWords()
+        wViewModel.getWords()
     }
 
     val orientation =
@@ -74,17 +80,17 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
         else -> 9
     }
     val firstTurn = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     val firstScore = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     val secondScore = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     val rand = Random()
-    firstTurn.value = if (rand.nextInt(2) == 1) {
+    firstTurn.intValue = if (rand.nextInt(2) == 1) {
         firstNumOfCard++
         1
     } else {
@@ -98,13 +104,32 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
     /* Duplicated array */
     Log.i("color", colorsNum.joinToString())
 
+    val neutralColor = colorResource(id = R.color.neutral)
+
+    val firstTeamColor = when (spViewModel.getInt("teams_color")) {
+        0 -> colorResource(id = R.color.wild_berries_color1)
+        1 -> colorResource(id = R.color.mustard_field_color1)
+        2 -> colorResource(id = R.color.carrot_freshness_color1)
+        3 -> colorResource(id = R.color.noble_saffron_color1)
+        4 -> colorResource(id = R.color.lilac_at_midnight_color1)
+        else -> colorResource(id = R.color.cranberries_in_moss_color1)
+    }
+    val secondTeamColor = when (spViewModel.getInt("teams_color")) {
+        0 -> colorResource(id = R.color.wild_berries_color2)
+        1 -> colorResource(id = R.color.mustard_field_color2)
+        2 -> colorResource(id = R.color.carrot_freshness_color2)
+        3 -> colorResource(id = R.color.noble_saffron_color2)
+        4 -> colorResource(id = R.color.lilac_at_midnight_color2)
+        else -> colorResource(id = R.color.cranberries_in_moss_color2)
+    }
+
     /* Need to optimise */
     val selectColors = MutableList(size) { colorResource(id = R.color.dark_gray) }
     val colors = MutableList(0) { colorResource(id = R.color.dark_gray) }
     val colorMap = mapOf(
         0 to colorResource(id = R.color.neutral),
-        1 to colorResource(id = R.color.blue),
-        2 to colorResource(id = R.color.red),
+        1 to firstTeamColor,
+        2 to secondTeamColor,
         3 to colorResource(id = R.color.black)
     )
     colorsNum.forEach { colors.add(colorMap[it]!!) }
@@ -156,7 +181,12 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                         tint = colorResource(id = R.color.white)
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    navController.popBackStack(
+                        destinationId = navController.findDestination("home")!!.id,
+                        inclusive = false
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_home),
                         contentDescription = "Home",
@@ -167,14 +197,14 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                     if (showCards.value) {
                         showCards.value = false
                     }
-                    firstScore.value = 0
-                    secondScore.value = 0
+                    firstScore.intValue = 0
+                    secondScore.intValue = 0
                     selectColors.fill(DarkGray)
                     showedColors.clear()
                     showedColors.addAll(selectColors)
                     enabled.fill(true)
                     selectEnable.fill(true)
-                    words = mViewModel.getWords()
+                    words = wViewModel.getWords()
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_mix_cards),
@@ -215,11 +245,15 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(vertical = 8.dp)
+                            .shadow(
+                                elevation = 3.dp,
+                                shape = RoundedCornerShape(6.dp)
+                            )
                             .clip(shape = RoundedCornerShape(6.dp))
-                            .background(colorResource(id = R.color.blue))
+                            .background(firstTeamColor)
                     ) {
                         Text(
-                            text = StringBuilder().append("${firstScore.value}/$firstNumOfCard")
+                            text = StringBuilder().append("${firstScore.intValue}/$firstNumOfCard")
                                 .toString(),
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
@@ -240,11 +274,15 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(vertical = 8.dp)
+                            .shadow(
+                                elevation = 3.dp,
+                                shape = RoundedCornerShape(6.dp)
+                            )
                             .clip(shape = RoundedCornerShape(6.dp))
-                            .background(colorResource(id = R.color.red))
+                            .background(secondTeamColor)
                     ) {
                         Text(
-                            text = StringBuilder().append("${secondScore.value}/$secondNumOfCard")
+                            text = StringBuilder().append("${secondScore.intValue}/$secondNumOfCard")
                                 .toString(),
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
@@ -274,43 +312,43 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                     ) {
                         for (j in 0 until orientation) {
                             val index = i
-                            Button(
-                                onClick = {
-                                    if (enabled[index]) {
-                                        if (colorsNum[index] == 1)
-                                            firstScore.value++
-                                        else if (colorsNum[index] == 2)
-                                            secondScore.value++
-                                        enabled[index] = false
-                                        selectEnable[index] = false
-                                        selectColors[index] = colors[index]
-                                        showedColors[index] = colors[index]
-                                    }
-                                },
+                            Box(
                                 modifier = Modifier
+                                    .shadow(
+                                        elevation = 10.dp,
+                                        shape = RoundedCornerShape(6.dp)
+                                    )
                                     .weight(1F)
-                                    .padding(end = 8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor =
-                                    if (showCards.value) {
-                                        if (showedColors[index] == selectColors[index])
-                                            darkerColor(showedColors[index])
-                                        else showedColors[index]
-                                    } else showedColors[index]
-                                ),
-                                shape = RoundedCornerShape(6.dp),
-                                elevation = ButtonDefaults.buttonElevation(
-                                    defaultElevation = 4.dp,
-                                    pressedElevation = 4.dp,
-                                    focusedElevation = 4.dp,
-                                    hoveredElevation = 4.dp,
-                                    disabledElevation = 4.dp
-                                ),
-                                contentPadding = PaddingValues(start = 1.dp, end = 1.dp),
+                                    .padding(end = 8.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(
+                                        if (showCards.value) {
+                                            if (showedColors[index] == selectColors[index])
+                                                darkerColor(showedColors[index])
+                                            else showedColors[index]
+                                        } else showedColors[index]
+                                    )
+                                    .combinedClickable(
+                                        onClick = {},
+                                        onLongClick = {
+                                            if (enabled[index]) {
+                                                if (colorsNum[index] == 1)
+                                                    firstScore.intValue++
+                                                else if (colorsNum[index] == 2)
+                                                    secondScore.intValue++
+                                                enabled[index] = false
+                                                selectEnable[index] = false
+                                                selectColors[index] = colors[index]
+                                                showedColors[index] = colors[index]
+                                            }
+                                        }
+                                    ),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = words[index],
-                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp),
                                     overflow = TextOverflow.Ellipsis,
                                     softWrap = false,
                                     style = MainText,
@@ -319,17 +357,17 @@ fun Leader(navController: NavController, mViewModel: WordViewModel) {
                                     if (showCards.value) {
                                         if (showedColors[index] == selectColors[index])
                                             darkerColor(
-                                                if (selectColors[index] == colorResource(id = R.color.neutral))
+                                                if (selectColors[index] == neutralColor)
                                                     colorResource(id = R.color.dark_gray)
                                                 else colorResource(id = R.color.white)
                                             )
                                         else {
-                                            if (showedColors[index] == colorResource(id = R.color.neutral))
+                                            if (showedColors[index] == neutralColor)
                                                 colorResource(id = R.color.dark_gray)
                                             else colorResource(id = R.color.white)
                                         }
                                     } else {
-                                        if (selectColors[index] == colorResource(id = R.color.neutral)) {
+                                        if (selectColors[index] == neutralColor) {
                                             colorResource(id = R.color.dark_gray)
                                         } else colorResource(id = R.color.white)
                                     }

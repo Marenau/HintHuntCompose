@@ -1,18 +1,17 @@
 package com.corylab.hinthuntcompose.ui.navgraph
 
 import android.content.Context
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.corylab.hinthuntcompose.screens.CreateGame
-import com.corylab.hinthuntcompose.screens.Home
-import com.corylab.hinthuntcompose.screens.Leader
-import com.corylab.hinthuntcompose.screens.Settings
+import com.corylab.hinthuntcompose.ui.screens.CreateGame
+import com.corylab.hinthuntcompose.ui.screens.Home
+import com.corylab.hinthuntcompose.ui.screens.Leader
+import com.corylab.hinthuntcompose.ui.screens.Settings
 import com.corylab.hinthuntcompose.ui.application.HintHunt
+import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
 
 @Composable
@@ -24,8 +23,14 @@ fun Navigation(applicationContext: Context) {
         {
             Leader(
                 navController = navController,
-                mViewModel = viewModel(
+                wViewModel = viewModel(
                     factory = WordViewModel.WordViewModelFactory(
+                        applicationContext,
+                        HintHunt.repository
+                    )
+                ),
+                spViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
                         HintHunt.repository
                     )
@@ -33,7 +38,15 @@ fun Navigation(applicationContext: Context) {
             )
         }
         composable("creategame") {
-            CreateGame(navController)
+            CreateGame(
+                navController = navController,
+                mViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
+                        applicationContext,
+                        HintHunt.repository
+                    )
+                )
+            )
         }
         composable("settings") {
             Settings(navController)
