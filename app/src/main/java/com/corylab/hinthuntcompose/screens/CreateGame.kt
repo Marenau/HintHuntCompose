@@ -39,15 +39,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.theme.Title
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+//@Preview
 @Composable
-fun CreateGame() {
-
+fun CreateGame(navController: NavController) {
+    val cardModifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 24.dp)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,9 +68,7 @@ fun CreateGame() {
                 .padding(top = 16.dp)
         )
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
+            modifier = cardModifier,
             colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
             shape = RoundedCornerShape(6.dp)
 
@@ -125,9 +126,7 @@ fun CreateGame() {
             }
         }
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
+            modifier = cardModifier,
             colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
             shape = RoundedCornerShape(6.dp)
 
@@ -184,9 +183,7 @@ fun CreateGame() {
             }
         }
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
+            modifier = cardModifier,
             colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
             shape = RoundedCornerShape(6.dp)
 
@@ -296,7 +293,7 @@ fun CreateGame() {
                 .fillMaxSize()
         ) {
             Button(
-                onClick = { /* Handle create game click */ },
+                onClick = { navController.navigate("leader") },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(),

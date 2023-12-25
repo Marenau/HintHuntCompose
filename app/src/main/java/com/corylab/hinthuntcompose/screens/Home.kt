@@ -22,13 +22,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.ui.theme.AppNameStyle
 import com.corylab.hinthuntcompose.ui.theme.MainText
 
-@Preview
+
+//@Preview
 @Composable
-fun Home() {
+fun Home(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,19 +64,24 @@ fun Home() {
 
         ButtonWithText(
             modifier = modifier,
-            text = stringResource(id = R.string.fragment_home_create_game)
+            text = stringResource(id = R.string.fragment_home_create_game),
+            onClick = {   navController.navigate("creategame")}
         )
         ButtonWithText(
             modifier = modifier,
-            text = stringResource(id = R.string.fragment_home_connect_game)
+            text = stringResource(id = R.string.fragment_home_connect_game),
+            onClick = { }
         )
         ButtonWithText(
             modifier = modifier,
-            text = stringResource(id = R.string.fragment_home_rules)
+            text = stringResource(id = R.string.fragment_home_rules),
+            onClick = {  }
         )
         ButtonWithText(
             modifier = modifier,
-            text = stringResource(id = R.string.fragment_home_settings)
+            text = stringResource(id = R.string.fragment_home_settings),
+            onClick = {
+                navController.navigate("settings") }
         )
 
         Box(
@@ -82,7 +92,8 @@ fun Home() {
                 modifier = Modifier
                     .width(250.dp)
                     .align(Alignment.BottomCenter),
-                text = stringResource(id = R.string.fragment_home_authors)
+                text = stringResource(id = R.string.fragment_home_authors),
+                onClick = { /* Обработка нажатия */ }
             )
         }
     }
@@ -91,7 +102,8 @@ fun Home() {
 @Composable
 fun ButtonWithText(
     modifier: Modifier,
-    text: String
+    text: String,
+    onClick: () -> Unit
 ) {
     val buttonColors = ButtonDefaults.buttonColors(
         containerColor = colorResource(id = R.color.light_gray),
@@ -99,7 +111,7 @@ fun ButtonWithText(
     )
     val cornerShape = RoundedCornerShape(6.dp)
     Button(
-        onClick = {},
+        onClick = onClick,
         modifier = modifier,
         shape = cornerShape,
         colors = buttonColors

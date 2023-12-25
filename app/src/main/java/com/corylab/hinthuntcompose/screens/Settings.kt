@@ -25,14 +25,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.theme.Title
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+//@Preview
 @Composable
-fun Settings() {
+fun Settings(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -174,7 +175,8 @@ fun Settings() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
-                text = stringResource(id = R.string.fragment_settings_support_developers)
+                text = stringResource(id = R.string.fragment_settings_support_developers),
+                onClick = {}
             )
         }
     }
