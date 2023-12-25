@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.sp
 import com.corylab.hinthuntcompose.R
 
 val RobotoFontFamily = FontFamily(
+    Font(R.font.roboto_condensed_extra_bold, FontWeight.ExtraBold),
     Font(R.font.roboto_condensed_semi_bold, FontWeight.SemiBold),
     Font(R.font.roboto_condensed_medium, FontWeight.Medium),
     Font(R.font.roboto_condensed_regular, FontWeight.Normal)

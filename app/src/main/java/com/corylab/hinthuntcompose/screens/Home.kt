@@ -31,7 +31,6 @@ import com.corylab.hinthuntcompose.ui.theme.AppNameStyle
 import com.corylab.hinthuntcompose.ui.theme.MainText
 
 
-//@Preview
 @Composable
 fun Home(navController: NavController) {
     Column(

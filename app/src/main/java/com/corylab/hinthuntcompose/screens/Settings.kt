@@ -31,7 +31,6 @@ import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.theme.Title
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview
 @Composable
 fun Settings(navController: NavController) {
     Column(
