@@ -55,20 +55,17 @@ import java.util.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun Leader(
+fun LeaderWordsOffline(
     navController: NavController,
     wViewModel: WordViewModel,
-    spViewModel: SharedPreferencesViewModel
+    spViewModel: SharedPreferencesViewModel,
 ) {
-    var words = remember {
-        wViewModel.getWords()
-    }
+    var words = wViewModel.getWords()
 
     val orientation =
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
 
     val size = words.size
-    val colorsNum = Array(size) { 0 }
     var firstNumOfCard = when (words.size) {
         18 -> 5
         24 -> 7
@@ -97,12 +94,10 @@ fun Leader(
         secondNumOfCard++
         2
     }
-    generateNum(colorsNum, 1, firstNumOfCard)
-    generateNum(colorsNum, 2, secondNumOfCard)
-    generateNum(colorsNum, 3, 1)
 
-    /* Duplicated array */
-    Log.i("color", colorsNum.joinToString())
+    /* Duplicated arr */
+    var colorsNums = wViewModel.createColorsNums(size, firstNumOfCard, secondNumOfCard)
+    Log.i("colors", colorsNums.joinToString())
 
     val neutralColor = colorResource(id = R.color.neutral)
 
@@ -132,9 +127,7 @@ fun Leader(
         2 to secondTeamColor,
         3 to colorResource(id = R.color.black)
     )
-    colorsNum.forEach { colors.add(colorMap[it]!!) }
-
-    Log.i("colors", colors.joinToString())
+    colorsNums.forEach { colors.add(colorMap[it]!!) }
 
     val showedColors = remember { mutableStateListOf<Color>() }
     showedColors.addAll(selectColors)
@@ -205,6 +198,19 @@ fun Leader(
                     enabled.fill(true)
                     selectEnable.fill(true)
                     words = wViewModel.getWords()
+                    colorsNums = wViewModel.createColorsNums(size, firstNumOfCard, secondNumOfCard)
+                    colors.clear()
+                    colorsNums.forEach { colors.add(colorMap[it]!!) }
+                    val min = minOf(firstNumOfCard, secondNumOfCard)
+                    firstNumOfCard = min
+                    secondNumOfCard = min
+                    firstTurn.intValue = if (rand.nextInt(2) == 1) {
+                        firstNumOfCard++
+                        1
+                    } else {
+                        secondNumOfCard++
+                        2
+                    }
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_mix_cards),
@@ -332,9 +338,9 @@ fun Leader(
                                         onClick = {},
                                         onLongClick = {
                                             if (enabled[index]) {
-                                                if (colorsNum[index] == 1)
+                                                if (colorsNums[index] == 1)
                                                     firstScore.intValue++
-                                                else if (colorsNum[index] == 2)
+                                                else if (colorsNums[index] == 2)
                                                     secondScore.intValue++
                                                 enabled[index] = false
                                                 selectEnable[index] = false
@@ -379,17 +385,6 @@ fun Leader(
                 }
             }
         }
-    }
-}
-
-fun generateNum(arr: Array<Int>, num: Int, size: Int) {
-    val rand = Random()
-    for (i in 1..size) {
-        var index: Int
-        do {
-            index = rand.nextInt(arr.size)
-        } while (arr[index] != 0)
-        arr[index] = num
     }
 }
 

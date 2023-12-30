@@ -19,6 +19,12 @@
     <string name="fragment_settings_support_developers">Support developers</string>
 
     <string name="fragment_create_game_title">Create game</string>
+    <string name="fragment_create_game_game_mode">Game mode</string>
+    <string name="fragment_create_game_game_mode_offline">Offline</string>
+    <string name="fragment_create_game_game_mode_online">Online</string>
+    <string name="fragment_create_game_game_type">Type</string>
+    <string name="fragment_create_game_game_type_words">Words</string>
+    <string name="fragment_create_game_game_type_illustrations">Illustrations</string>
     <string name="fragment_create_game_board_size">Game board size</string>
     <string name="fragment_create_game_board_size_18">18</string>
     <string name="fragment_create_game_board_size_24">24</string>

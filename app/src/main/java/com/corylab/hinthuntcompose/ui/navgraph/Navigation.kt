@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.corylab.hinthuntcompose.ui.screens.CreateGame
 import com.corylab.hinthuntcompose.ui.screens.Home
-import com.corylab.hinthuntcompose.ui.screens.Leader
+import com.corylab.hinthuntcompose.ui.screens.LeaderWordsOffline
 import com.corylab.hinthuntcompose.ui.screens.Settings
 import com.corylab.hinthuntcompose.ui.application.HintHunt
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
@@ -21,7 +21,7 @@ fun Navigation(applicationContext: Context) {
     {
         composable("leader")
         {
-            Leader(
+            LeaderWordsOffline(
                 navController = navController,
                 wViewModel = viewModel(
                     factory = WordViewModel.WordViewModelFactory(

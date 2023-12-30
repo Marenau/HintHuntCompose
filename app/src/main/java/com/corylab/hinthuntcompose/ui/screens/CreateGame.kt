@@ -48,6 +48,8 @@ import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 @Composable
 fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewModel) {
 
+    val mode = mViewModel.getInt("game_mode")
+    val type = mViewModel.getInt("game_type")
     val size = mViewModel.getInt("size")
     val complexity = mViewModel.getInt("complexity")
     val teamsColor = mViewModel.getInt("teams_color")
@@ -55,6 +57,22 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
     val cardModifier = Modifier
         .fillMaxWidth()
         .padding(top = 24.dp)
+
+    val gameMods = listOf(
+        stringResource(id = R.string.fragment_create_game_game_mode_offline),
+        stringResource(id = R.string.fragment_create_game_game_mode_online)
+    )
+    val (modeSelectedOption, modeOnOptionSelected) = remember {
+        mutableStateOf(gameMods[mode])
+    }
+
+    val gameType = listOf(
+        stringResource(id = R.string.fragment_create_game_game_type_words),
+        stringResource(id = R.string.fragment_create_game_game_type_illustrations)
+    )
+    val (typeSelectedOption, typeOnOptionSelected) = remember {
+        mutableStateOf(gameType[type])
+    }
 
     val sizes = listOf(
         stringResource(id = R.string.fragment_create_game_board_size_18),
@@ -119,13 +137,113 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
 
         ) {
             Text(
+                text = stringResource(id = R.string.fragment_create_game_game_mode),
+                style = MainText,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            )
+            Row(
+                Modifier
+                    .selectableGroup()
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)
+            ) {
+                for (i in gameMods.indices) {
+                    FilterChip(
+                        selected = (gameMods[i] == modeSelectedOption),
+                        onClick = { modeOnOptionSelected(gameMods[i]) },
+                        shape = RoundedCornerShape(6.dp),
+                        modifier = Modifier
+                            .weight(1F)
+                            .padding(end = 8.dp),
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = colorResource(
+                                id = R.color.dark_gray
+                            ),
+                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            selectedBorderColor = colorResource(id = R.color.white),
+                            selectedBorderWidth = 1.dp
+                        ),
+                        label = {
+                            Text(
+                                text = gameMods[i],
+                                style = MainText,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 8.dp),
+                                textAlign = TextAlign.Center,
+                                fontSize = 15.sp
+                            )
+                        }
+                    )
+                }
+            }
+        }
+        Card(
+            modifier = cardModifier,
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            shape = RoundedCornerShape(6.dp)
+
+        ) {
+            Text(
+                text = stringResource(id = R.string.fragment_create_game_game_type),
+                style = MainText,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            )
+            Row(
+                Modifier
+                    .selectableGroup()
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)
+            ) {
+                for (i in gameType.indices) {
+                    FilterChip(
+                        selected = (gameType[i] == typeSelectedOption),
+                        onClick = { typeOnOptionSelected(gameType[i]) },
+                        shape = RoundedCornerShape(6.dp),
+                        modifier = Modifier
+                            .weight(1F)
+                            .padding(end = 8.dp),
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = colorResource(
+                                id = R.color.dark_gray
+                            ),
+                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            selectedBorderColor = colorResource(id = R.color.white),
+                            selectedBorderWidth = 1.dp
+                        ),
+                        label = {
+                            Text(
+                                text = gameType[i],
+                                style = MainText,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 8.dp),
+                                textAlign = TextAlign.Center,
+                                fontSize = 15.sp
+                            )
+                        }
+                    )
+                }
+            }
+        }
+        Card(
+            modifier = cardModifier,
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            shape = RoundedCornerShape(6.dp)
+
+        ) {
+            Text(
                 text = stringResource(id = R.string.fragment_create_game_board_size),
                 style = MainText,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
             )
-
-
             Row(
                 Modifier
                     .selectableGroup()
@@ -226,7 +344,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                 text = stringResource(id = R.string.fragment_create_game_colors_of_teams),
                 style = MainText,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                modifier = Modifier.padding(8.dp)
             )
             val brushes = listOf(
                 Brush.horizontalGradient(
@@ -266,7 +384,6 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                     )
                 )
             )
-
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -362,7 +479,14 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         ) {
             Button(
                 onClick = {
-                    navController.navigate("leader")
+                    mViewModel.putInt("game_mode", when(modeSelectedOption) {
+                        "Offline" -> 0
+                        else -> 1
+                    })
+                    mViewModel.putInt("game_type", when(typeSelectedOption) {
+                        "Words" -> 0
+                        else -> 1
+                    })
                     mViewModel.putInt("size", sizeSelectedOption.toInt())
                     mViewModel.putInt("complexity", when(complexitySelectedOption) {
                         "\uD83E\uDD0D" -> 0
@@ -377,6 +501,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                         "Lilac at midnight" -> 4
                         else -> 5
                     })
+                    navController.navigate("leader")
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

@@ -16,6 +16,8 @@ class Repository(application: Context) {
 
     fun putString(key: String, text: String) = sharedPreferencesSource.putString(key, text)
 
+    fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int) = wordCardSource.createColorsNums(size, firstNumOfCard, secondNumOfCard)
+
     private fun getSize() = getInt("size")
 
     private fun getEasyWords() = wordCardSource.getEasyWords(getSize())

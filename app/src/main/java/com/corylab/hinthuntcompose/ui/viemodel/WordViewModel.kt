@@ -9,6 +9,8 @@ class WordViewModel(private val repository: Repository) : ViewModel() {
 
     fun getWords() = repository.getWords()
 
+    fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int) = repository.createColorsNums(size, firstNumOfCard, secondNumOfCard)
+
     class WordViewModelFactory(
         private val context: Context,
         private val repository: Repository
