@@ -1,5 +1,9 @@
 package com.corylab.hinthuntcompose.ui.screens
 
+import android.app.LocaleManager
+import android.content.Context
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,20 +23,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import android.os.LocaleList
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.theme.Title
+import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(navController: NavController) {
+fun Settings(navController: NavController, mViewModel: SharedPreferencesViewModel) {
+    val language = mViewModel.getInt("language")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -121,21 +131,25 @@ fun Settings(navController: NavController) {
                 fontSize = 18.sp
             )
 
-            val schemes = listOf(
-                stringResource(id = R.string.fragment_settings_language_russian),
-                stringResource(id = R.string.fragment_settings_language_english)
-            )
-            val (selectedOption, onOptionSelected) = remember { mutableStateOf(schemes[0]) }
+            val languages = listOf("en","ru")
+            val context = LocalContext.current
+            val (selectedLanguage, onLanguageSelected) = remember { mutableStateOf(languages[language]) }
+
             Row(
                 Modifier
                     .selectableGroup()
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             ) {
-                schemes.forEach { text ->
+                listOf("ru", "en").forEach { languageCode ->
                     FilterChip(
-                        selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
+                        selected = (languageCode == selectedLanguage),
+                        onClick = {
+                            onLanguageSelected(languageCode)
+                            mViewModel.putInt("language", if (languageCode == "en") 0 else 1)
+                            localeSelection(context = context, localeTag = Locale(languageCode).toLanguageTag())
+
+                                  },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
@@ -152,7 +166,9 @@ fun Settings(navController: NavController) {
                         ),
                         label = {
                             Text(
-                                text = text,
+                                text = stringResource(
+                                    id = if (languageCode == "ru") R.string.fragment_settings_language_russian else R.string.fragment_settings_language_english
+                                ),
                                 style = MainText,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -180,3 +196,14 @@ fun Settings(navController: NavController) {
         }
     }
 }
+fun localeSelection(context: Context, localeTag: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.getSystemService(LocaleManager::class.java).applicationLocales =
+            LocaleList.forLanguageTags(localeTag)
+    } else {
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(localeTag)
+        )
+    }
+}
+

@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">HintHunt</string>
+
+    <string name="fragment_home_app_name">HintHunt</string>
+    <string name="fragment_home_create_game">Создать игру</string>
+    <string name="fragment_home_connect_game">Присоединиться к игре</string>
+    <string name="fragment_home_rules">Правила</string>
+    <string name="fragment_home_settings">Настройки</string>
+    <string name="fragment_home_authors">Авторы</string>
+
+    <string name="fragment_settings_title">Настройки</string>
+    <string name="fragment_settings_color_scheme">Цветовая схема</string>
+    <string name="fragment_settings_color_scheme_system_chip">Системная</string>
+    <string name="fragment_settings_color_scheme_light_chip">Светлая</string>
+    <string name="fragment_settings_color_scheme_dark_chip">Темная</string>
+    <string name="fragment_settings_language">Язык</string>
+    <string name="fragment_settings_language_russian">Русский</string>
+    <string name="fragment_settings_language_english">Английский</string>
+    <string name="fragment_settings_support_developers">Поддержать разработчиков</string>
+
+    <string name="fragment_create_game_title">Создание игры</string>
+    <string name="fragment_create_game_game_mode">Режим игры</string>
+    <string name="fragment_create_game_game_mode_offline">Офлайн</string>
+    <string name="fragment_create_game_game_mode_online">Онлайн</string>
+    <string name="fragment_create_game_game_type">Тип карточек</string>
+    <string name="fragment_create_game_game_type_words">Слова</string>
+    <string name="fragment_create_game_game_type_illustrations">Иллюстрации</string>
+    <string name="fragment_create_game_board_size">Размер доски</string>
+    <string name="fragment_create_game_board_size_18">18</string>
+    <string name="fragment_create_game_board_size_24">24</string>
+    <string name="fragment_create_game_board_size_30">30</string>
+    <string name="fragment_create_game_words_complexity_easy">🤍</string>
+    <string name="fragment_create_game_words_complexity_medium">🤍 🤍</string>
+    <string name="fragment_create_game_words_complexity_hard">🤍 🤍 🤍</string>
+    <string name="fragment_create_game_complexity_of_words">Сложность слов</string>
+    <string name="fragment_create_game_colors_of_teams">Цвета команд</string>
+    <string name="fragment_create_game_wild_berries">Лесные ягоды</string>
+    <string name="fragment_create_game_mustard_field">Горчичное поле</string>
+    <string name="fragment_create_game_carrot_freshness">Морковная свежесть</string>
+    <string name="fragment_create_game_noble_saffron">Благородный шафран</string>
+    <string name="fragment_create_game_lilac_at_midnight">Сирень в полночь</string>
+    <string name="fragment_create_game_cranberries_in_moss">Брусника во мхе</string>
+    <string name="fragment_create_game_create">Создать</string>
+
+    <string name="fragment_player_menu_information">Info</string>
+    <string name="fragment_player_menu_home">Home</string>
+    <string name="fragment_player_menu_turn">Turn</string>
+    <string name="fragment_player_turn">Ход</string>
+
+    <string name="fragment_leader_menu_turn">Turn</string>
+    <string name="fragment_leader_menu_show_cards">Show cards</string>
+    <string name="fragment_leader_menu_home">Home</string>
+    <string name="fragment_leader_menu_mix_cards">Mix cards</string>
+    <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
+    <string name="fragment_leader_victory">Победа!</string>
+    <string name="fragment_leader_winner_first">Первая команда победила!</string>
+    <string name="fragment_leader_winner_second">Вторая команда победила!</string>
+    <string name="fragment_leader_confirm_winner">Подтвердить</string>
+</resources>

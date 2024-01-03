@@ -49,7 +49,15 @@ fun Navigation(applicationContext: Context) {
             )
         }
         composable("settings") {
-            Settings(navController)
+            Settings(
+                navController = navController,
+                mViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
+                        applicationContext,
+                        HintHunt.repository
+                    )
+                )
+            )
         }
         composable("home") {
             Home(navController)
