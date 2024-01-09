@@ -27,9 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,19 +38,22 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
-import com.corylab.hinthuntcompose.ui.theme.DarkGray
+import com.corylab.hinthuntcompose.data.remember.rememberMutableStateBoolListOf
+import com.corylab.hinthuntcompose.data.remember.rememberMutableStateIntListOf
+import com.corylab.hinthuntcompose.data.remember.rememberMutableStateNumsListOf
+import com.corylab.hinthuntcompose.data.remember.rememberMutableStateWordListOf
 import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
-import java.util.Random
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -60,88 +62,107 @@ fun LeaderWordsOffline(
     wViewModel: WordViewModel,
     spViewModel: SharedPreferencesViewModel,
 ) {
-    var words = wViewModel.getWords()
+    val words = rememberMutableStateWordListOf(wViewModel.getWords())
 
-    val orientation =
+    val quantity =
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
 
     val size = words.size
-    var firstNumOfCard = when (words.size) {
-        18 -> 5
-        24 -> 7
-        else -> 9
+    val firstNumOfCard = rememberSaveable {
+        when (words.size) {
+            18 -> mutableIntStateOf(5)
+            24 -> mutableIntStateOf(7)
+            else -> mutableIntStateOf(9)
+        }
     }
-    var secondNumOfCard = when (words.size) {
-        18 -> 5
-        24 -> 7
-        else -> 9
+
+    val secondNumOfCard = rememberSaveable {
+        when (words.size) {
+            18 -> mutableIntStateOf(5)
+            24 -> mutableIntStateOf(7)
+            else -> mutableIntStateOf(9)
+        }
     }
-    val firstTurn = remember {
+
+    val firstScore = rememberSaveable {
         mutableIntStateOf(0)
     }
-    val firstScore = remember {
-        mutableIntStateOf(0)
-    }
-    val secondScore = remember {
+    val secondScore = rememberSaveable {
         mutableIntStateOf(0)
     }
 
-    val rand = Random()
-    firstTurn.intValue = if (rand.nextInt(2) == 1) {
-        firstNumOfCard++
-        1
-    } else {
-        secondNumOfCard++
-        2
+    val turn = rememberSaveable {
+        if (Random.nextInt(2) == 1) {
+            firstNumOfCard.intValue++
+            mutableIntStateOf(1)
+        } else {
+            secondNumOfCard.intValue++
+            mutableIntStateOf(2)
+        }
     }
 
-    /* Duplicated arr */
-    var colorsNums = wViewModel.createColorsNums(size, firstNumOfCard, secondNumOfCard)
-    Log.i("colors", colorsNums.joinToString())
+    val turnText = rememberSaveable {
+        mutableStateOf(
+            if (turn.intValue == 1) StringBuilder().append("←").append("Turn")
+                .toString() else StringBuilder().append("Turn").append("→").toString()
+        )
+    }
+
+    val colorsNums = rememberMutableStateNumsListOf(
+        wViewModel.createColorsNums(
+            size,
+            firstNumOfCard.intValue,
+            secondNumOfCard.intValue
+        )
+    )
 
     val neutralColor = colorResource(id = R.color.neutral)
 
-    val firstTeamColor = when (spViewModel.getInt("teams_color")) {
-        0 -> colorResource(id = R.color.wild_berries_color1)
-        1 -> colorResource(id = R.color.mustard_field_color1)
-        2 -> colorResource(id = R.color.carrot_freshness_color1)
-        3 -> colorResource(id = R.color.noble_saffron_color1)
-        4 -> colorResource(id = R.color.lilac_at_midnight_color1)
-        else -> colorResource(id = R.color.cranberries_in_moss_color1)
-    }
-    val secondTeamColor = when (spViewModel.getInt("teams_color")) {
-        0 -> colorResource(id = R.color.wild_berries_color2)
-        1 -> colorResource(id = R.color.mustard_field_color2)
-        2 -> colorResource(id = R.color.carrot_freshness_color2)
-        3 -> colorResource(id = R.color.noble_saffron_color2)
-        4 -> colorResource(id = R.color.lilac_at_midnight_color2)
-        else -> colorResource(id = R.color.cranberries_in_moss_color2)
+    val (firstTeamColor, secondTeamColor) = when (spViewModel.getInt("teams_color")) {
+        0 -> Pair(
+            colorResource(id = R.color.wild_berries_color1),
+            colorResource(id = R.color.wild_berries_color2)
+        )
+
+        1 -> Pair(
+            colorResource(id = R.color.mustard_field_color1),
+            colorResource(id = R.color.mustard_field_color2)
+        )
+
+        2 -> Pair(
+            colorResource(id = R.color.carrot_freshness_color1),
+            colorResource(id = R.color.carrot_freshness_color2)
+        )
+
+        3 -> Pair(
+            colorResource(id = R.color.noble_saffron_color1),
+            colorResource(id = R.color.noble_saffron_color2)
+        )
+
+        4 -> Pair(
+            colorResource(id = R.color.lilac_at_midnight_color1),
+            colorResource(id = R.color.lilac_at_midnight_color2)
+        )
+
+        else -> Pair(
+            colorResource(id = R.color.cranberries_in_moss_color1),
+            colorResource(id = R.color.cranberries_in_moss_color2)
+        )
     }
 
-    /* Need to optimise */
-    val selectColors = MutableList(size) { colorResource(id = R.color.dark_gray) }
-    val colors = MutableList(0) { colorResource(id = R.color.dark_gray) }
+    val selectedColors = rememberMutableStateIntListOf(size)
     val colorMap = mapOf(
-        0 to colorResource(id = R.color.neutral),
+        0 to neutralColor,
         1 to firstTeamColor,
         2 to secondTeamColor,
         3 to colorResource(id = R.color.black)
     )
-    colorsNums.forEach { colors.add(colorMap[it]!!) }
 
-    val showedColors = remember { mutableStateListOf<Color>() }
-    showedColors.addAll(selectColors)
-
-    val showCards = remember {
+    val showCards = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val enabled = remember {
-        mutableStateListOf<Boolean>()
-    }
-    enabled.addAll(Array(30) { true })
-
-    val selectEnable = MutableList(size) { true }
+    val enabled = rememberMutableStateBoolListOf(size)
 
     Scaffold(bottomBar = {
         BottomAppBar(
@@ -157,20 +178,27 @@ fun LeaderWordsOffline(
             ) {
                 IconButton(onClick = {
                     showCards.value = !showCards.value
-                    if (showCards.value) {
-                        enabled.fill(false)
-                        showedColors.clear()
-                        showedColors.addAll(colors)
-                    } else {
-                        enabled.clear()
-                        enabled.addAll(selectEnable)
-                        showedColors.clear()
-                        showedColors.addAll(selectColors)
-                    }
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_show_cards),
                         contentDescription = "Show cards",
+                        tint = colorResource(id = R.color.white)
+                    )
+                }
+                IconButton(onClick = {
+                    turn.intValue = if (turn.intValue == 1) {
+                        turnText.value = StringBuilder().append("Turn").append("→").toString()
+                        2
+                    } else {
+                        turnText.value = StringBuilder().append("←").append("Turn").toString()
+                        1
+                    }
+                    Log.i("PRESS", turn.intValue.toString())
+                }) {
+                    //TODO confirm window
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_turn),
+                        contentDescription = "Turn",
                         tint = colorResource(id = R.color.white)
                     )
                 }
@@ -192,26 +220,33 @@ fun LeaderWordsOffline(
                     }
                     firstScore.intValue = 0
                     secondScore.intValue = 0
-                    selectColors.fill(DarkGray)
-                    showedColors.clear()
-                    showedColors.addAll(selectColors)
+                    selectedColors.fill(0)
+                    words.clear()
+                    words.addAll(wViewModel.getWords())
                     enabled.fill(true)
-                    selectEnable.fill(true)
-                    words = wViewModel.getWords()
-                    colorsNums = wViewModel.createColorsNums(size, firstNumOfCard, secondNumOfCard)
-                    colors.clear()
-                    colorsNums.forEach { colors.add(colorMap[it]!!) }
-                    val min = minOf(firstNumOfCard, secondNumOfCard)
-                    firstNumOfCard = min
-                    secondNumOfCard = min
-                    firstTurn.intValue = if (rand.nextInt(2) == 1) {
-                        firstNumOfCard++
+                    colorsNums.clear()
+                    colorsNums.addAll(
+                        wViewModel.createColorsNums(
+                            size,
+                            firstNumOfCard.intValue,
+                            secondNumOfCard.intValue
+                        )
+                    )
+                    val min = minOf(firstNumOfCard.intValue, secondNumOfCard.intValue)
+                    firstNumOfCard.intValue = min
+                    secondNumOfCard.intValue = min
+                    turn.intValue = if (Random.nextInt(2) == 1) {
+                        firstNumOfCard.intValue++
                         1
                     } else {
-                        secondNumOfCard++
+                        secondNumOfCard.intValue++
                         2
                     }
+                    turnText.value =
+                        if (turn.intValue == 1) StringBuilder().append("←").append("Turn")
+                            .toString() else StringBuilder().append("Turn").append("→").toString()
                 }) {
+                    //TODO confirm window
                     Icon(
                         painter = painterResource(id = R.drawable.icon_mix_cards),
                         contentDescription = "Mix cards",
@@ -241,15 +276,11 @@ fun LeaderWordsOffline(
                 colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
                 shape = RoundedCornerShape(6.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+                    val (firstTeamScore, textTurn, secondTeamScore) = createRefs()
+
                     Box(
                         modifier = Modifier
-                            .wrapContentSize()
                             .padding(vertical = 8.dp)
                             .shadow(
                                 elevation = 3.dp,
@@ -257,9 +288,14 @@ fun LeaderWordsOffline(
                             )
                             .clip(shape = RoundedCornerShape(6.dp))
                             .background(firstTeamColor)
+                            .constrainAs(firstTeamScore) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start, 8.dp)
+                                bottom.linkTo(parent.bottom)
+                            }
                     ) {
                         Text(
-                            text = StringBuilder().append("${firstScore.intValue}/$firstNumOfCard")
+                            text = StringBuilder().append("${firstScore.intValue}/${firstNumOfCard.intValue}")
                                 .toString(),
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
@@ -269,16 +305,20 @@ fun LeaderWordsOffline(
                     }
 
                     Text(
-                        text = stringResource(id = R.string.fragment_leader_menu_turn),
+                        text = turnText.value,
                         style = MainText,
-                        modifier = Modifier.align(Alignment.CenterVertically),
+                        modifier = Modifier.constrainAs(textTurn) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
                         fontSize = 20.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
 
                     Box(
                         modifier = Modifier
-                            .wrapContentSize()
                             .padding(vertical = 8.dp)
                             .shadow(
                                 elevation = 3.dp,
@@ -286,9 +326,14 @@ fun LeaderWordsOffline(
                             )
                             .clip(shape = RoundedCornerShape(6.dp))
                             .background(secondTeamColor)
+                            .constrainAs(secondTeamScore) {
+                                top.linkTo(parent.top)
+                                end.linkTo(parent.end, 8.dp)
+                                bottom.linkTo(parent.bottom)
+                            }
                     ) {
                         Text(
-                            text = StringBuilder().append("${secondScore.intValue}/$secondNumOfCard")
+                            text = StringBuilder().append("${secondScore.intValue}/${secondNumOfCard.intValue}")
                                 .toString(),
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
@@ -316,7 +361,7 @@ fun LeaderWordsOffline(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
                     ) {
-                        for (j in 0 until orientation) {
+                        for (j in 0 until quantity) {
                             val index = i
                             Box(
                                 modifier = Modifier
@@ -329,24 +374,62 @@ fun LeaderWordsOffline(
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(
                                         if (showCards.value) {
-                                            if (showedColors[index] == selectColors[index])
-                                                darkerColor(showedColors[index])
-                                            else showedColors[index]
-                                        } else showedColors[index]
+                                            if (selectedColors[index] == 1)
+                                                darkerColor(colorMap[colorsNums[index]]!!)
+                                            else colorMap[colorsNums[index]]!!
+                                        } else {
+                                            if (selectedColors[index] == 1) {
+                                                colorMap[colorsNums[index]]!!
+                                            } else {
+                                                colorResource(id = R.color.dark_gray)
+                                            }
+                                        }
                                     )
                                     .combinedClickable(
                                         onClick = {},
                                         onLongClick = {
-                                            if (enabled[index]) {
-                                                if (colorsNums[index] == 1)
-                                                    firstScore.intValue++
-                                                else if (colorsNums[index] == 2)
-                                                    secondScore.intValue++
-                                                enabled[index] = false
-                                                selectEnable[index] = false
-                                                selectColors[index] = colors[index]
-                                                showedColors[index] = colors[index]
+                                            if (!showCards.value) {
+                                                if (enabled[index]) {
+                                                    enabled[index] = false
+                                                    selectedColors[index] = 1
+                                                    if (turn.intValue == 1) {
+                                                        if (colorsNums[index] == 0) {
+                                                            turn.intValue = 2
+                                                            turnText.value = StringBuilder()
+                                                                .append("Turn")
+                                                                .append("→")
+                                                                .toString()
+                                                        } else if (colorsNums[index] == 1) {
+                                                            firstScore.intValue++
+                                                        } else if (colorsNums[index] == 2) {
+                                                            secondScore.intValue++
+                                                            turn.intValue = 2
+                                                            turnText.value = StringBuilder()
+                                                                .append("Turn")
+                                                                .append("→")
+                                                                .toString()
+                                                        }
+                                                    } else if (turn.intValue == 2) {
+                                                        if (colorsNums[index] == 0) {
+                                                            turn.intValue = 1
+                                                            turnText.value = StringBuilder()
+                                                                .append("←")
+                                                                .append("Turn")
+                                                                .toString()
+                                                        } else if (colorsNums[index] == 1) {
+                                                            firstScore.intValue++
+                                                            turn.intValue = 1
+                                                            turnText.value = StringBuilder()
+                                                                .append("←")
+                                                                .append("Turn")
+                                                                .toString()
+                                                        } else if (colorsNums[index] == 2) {
+                                                            secondScore.intValue++
+                                                        }
+                                                    }
+                                                }
                                             }
+                                            Log.i("PRESS", turn.intValue.toString())
                                         }
                                     ),
                                 contentAlignment = Alignment.Center
@@ -361,19 +444,19 @@ fun LeaderWordsOffline(
                                     fontSize = 15.sp,
                                     color =
                                     if (showCards.value) {
-                                        if (showedColors[index] == selectColors[index])
+                                        if (selectedColors[index] == 1)
                                             darkerColor(
-                                                if (selectColors[index] == neutralColor)
+                                                if (colorMap[colorsNums[index]]!! == neutralColor)
                                                     colorResource(id = R.color.dark_gray)
                                                 else colorResource(id = R.color.white)
                                             )
                                         else {
-                                            if (showedColors[index] == neutralColor)
+                                            if (colorMap[colorsNums[index]]!! == neutralColor)
                                                 colorResource(id = R.color.dark_gray)
                                             else colorResource(id = R.color.white)
                                         }
                                     } else {
-                                        if (selectColors[index] == neutralColor) {
+                                        if (selectedColors[index] == 1 && colorMap[colorsNums[index]]!! == neutralColor) {
                                             colorResource(id = R.color.dark_gray)
                                         } else colorResource(id = R.color.white)
                                     }

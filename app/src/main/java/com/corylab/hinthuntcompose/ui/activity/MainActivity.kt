@@ -1,7 +1,6 @@
 package com.corylab.hinthuntcompose.ui.activity
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.corylab.hinthuntcompose.ui.navgraph.Navigation

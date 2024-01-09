@@ -30,7 +30,7 @@
     <string name="fragment_create_game_words_complexity_easy">🤍</string>
     <string name="fragment_create_game_words_complexity_medium">🤍 🤍</string>
     <string name="fragment_create_game_words_complexity_hard">🤍 🤍 🤍</string>
-    <string name="fragment_create_game_complexity_of_words">Complexity of words</string>
+    <string name="fragment_create_game_complexity_of_words">Complexity</string>
     <string name="fragment_create_game_colors_of_teams">Colors of teams</string>
     <string name="fragment_create_game_wild_berries">Wild berries</string>
     <string name="fragment_create_game_mustard_field">Mustard field</string>

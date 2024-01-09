@@ -32,7 +32,7 @@
     <string name="fragment_create_game_words_complexity_easy">🤍</string>
     <string name="fragment_create_game_words_complexity_medium">🤍 🤍</string>
     <string name="fragment_create_game_words_complexity_hard">🤍 🤍 🤍</string>
-    <string name="fragment_create_game_complexity_of_words">Сложность слов</string>
+    <string name="fragment_create_game_complexity_of_words">Сложность</string>
     <string name="fragment_create_game_colors_of_teams">Цвета команд</string>
     <string name="fragment_create_game_wild_berries">Лесные ягоды</string>
     <string name="fragment_create_game_mustard_field">Горчичное поле</string>
