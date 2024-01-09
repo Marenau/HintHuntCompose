@@ -17,15 +17,15 @@ class WordCardSource {
         HintHunt.context.resources.openRawResource(R.raw.hard_words).bufferedReader().readLines()
             .shuffled().take(size)
 
-    fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int): Array<Int> {
-        val colorsNum = Array(size) { 0 }
+    fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int): List<Int> {
+        val colorsNum = MutableList(size) { 0 }
         generateNum(colorsNum, 1, firstNumOfCard)
         generateNum(colorsNum, 2, secondNumOfCard)
         generateNum(colorsNum, 3, 1)
         return colorsNum
     }
 
-    private fun generateNum(arr: Array<Int>, num: Int, size: Int) {
+    private fun generateNum(arr: MutableList<Int>, num: Int, size: Int) {
         val rand = Random()
         for (i in 1..size) {
             var index: Int

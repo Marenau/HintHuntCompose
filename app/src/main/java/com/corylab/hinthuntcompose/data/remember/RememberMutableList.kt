@@ -28,7 +28,7 @@ fun rememberMutableStateIntListOf(size: Int): SnapshotStateList<Int> {
 }
 
 @Composable
-fun rememberMutableStateNumsListOf(list: Array<Int>): SnapshotStateList<Int> {
+fun rememberMutableStateNumsListOf(list: List<Int>): SnapshotStateList<Int> {
     return rememberSaveable(
         saver = listSaver(
             save = { stateList ->
@@ -43,7 +43,7 @@ fun rememberMutableStateNumsListOf(list: Array<Int>): SnapshotStateList<Int> {
             restore = { it.toMutableStateList() }
         )
     ) {
-        list.toList().toMutableStateList()
+        list.toMutableStateList()
     }
 }
 

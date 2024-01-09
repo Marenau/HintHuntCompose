@@ -64,12 +64,12 @@ fun Home(navController: NavController) {
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_create_game),
-            onClick = {   navController.navigate("creategame")}
+            onClick = { navController.navigate("create_game") }
         )
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_connect_game),
-            onClick = { }
+            onClick = { navController.navigate("connect_game") }
         )
         ButtonWithText(
             modifier = modifier,

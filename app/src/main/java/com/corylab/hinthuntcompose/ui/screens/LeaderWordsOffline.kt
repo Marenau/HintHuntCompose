@@ -1,7 +1,7 @@
 package com.corylab.hinthuntcompose.ui.screens
 
 import android.content.res.Configuration
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -26,6 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,8 +38,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,13 +50,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
+import com.corylab.hinthuntcompose.data.qrcode.generateQrCode
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateBoolListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateIntListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateNumsListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateWordListOf
+import com.corylab.hinthuntcompose.ui.dialog.DialogWithImage
 import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
+import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -61,8 +68,14 @@ fun LeaderWordsOffline(
     navController: NavController,
     wViewModel: WordViewModel,
     spViewModel: SharedPreferencesViewModel,
+    data: String
 ) {
-    val words = rememberMutableStateWordListOf(wViewModel.getWords())
+    val localContext = LocalContext.current
+
+    val words = rememberMutableStateWordListOf(
+    if (data.isNotEmpty()) {
+        data.substring(0, data.indexOfFirst { it == ';' }).split(',')
+    } else wViewModel.getWords())
 
     val quantity =
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
@@ -101,23 +114,26 @@ fun LeaderWordsOffline(
         }
     }
 
+    val turnTextt = stringResource(id = R.string.fragment_leader_turn)
     val turnText = rememberSaveable {
         mutableStateOf(
-            if (turn.intValue == 1) StringBuilder().append("←").append("Turn")
-                .toString() else StringBuilder().append("Turn").append("→").toString()
+            if (turn.intValue == 1) StringBuilder().append("←").append(turnTextt)
+                .toString() else StringBuilder().append(turnTextt).append("→").toString()
         )
     }
 
     val colorsNums = rememberMutableStateNumsListOf(
-        wViewModel.createColorsNums(
-            size,
-            firstNumOfCard.intValue,
-            secondNumOfCard.intValue
-        )
+        if (data.isNotEmpty()) {
+            data.substring(data.indexOfFirst { it == ';' } + 1, data.length).split(',').map { it.toInt() }
+        } else wViewModel.createColorsNums(size, firstNumOfCard.intValue, secondNumOfCard.intValue)
     )
 
-    val neutralColor = colorResource(id = R.color.neutral)
+    if (data.isNotEmpty()) {
+        firstNumOfCard.intValue = colorsNums.count { it == 1 }
+        secondNumOfCard.intValue = colorsNums.count { it == 2 }
+    }
 
+    val neutralColor = colorResource(id = R.color.neutral)
     val (firstTeamColor, secondTeamColor) = when (spViewModel.getInt("teams_color")) {
         0 -> Pair(
             colorResource(id = R.color.wild_berries_color1),
@@ -164,6 +180,8 @@ fun LeaderWordsOffline(
 
     val enabled = rememberMutableStateBoolListOf(size)
 
+    val openDialog = rememberSaveable { mutableStateOf(false) }
+
     Scaffold(bottomBar = {
         BottomAppBar(
             modifier = Modifier
@@ -186,14 +204,7 @@ fun LeaderWordsOffline(
                     )
                 }
                 IconButton(onClick = {
-                    turn.intValue = if (turn.intValue == 1) {
-                        turnText.value = StringBuilder().append("Turn").append("→").toString()
-                        2
-                    } else {
-                        turnText.value = StringBuilder().append("←").append("Turn").toString()
-                        1
-                    }
-                    Log.i("PRESS", turn.intValue.toString())
+                    updateTurnText(turn, turnText, turnTextt, true)
                 }) {
                     //TODO confirm window
                     Icon(
@@ -243,8 +254,8 @@ fun LeaderWordsOffline(
                         2
                     }
                     turnText.value =
-                        if (turn.intValue == 1) StringBuilder().append("←").append("Turn")
-                            .toString() else StringBuilder().append("Turn").append("→").toString()
+                        if (turn.intValue == 1) StringBuilder().append("←").append(turnTextt)
+                            .toString() else StringBuilder().append(turnTextt).append("→").toString()
                 }) {
                     //TODO confirm window
                     Icon(
@@ -253,7 +264,9 @@ fun LeaderWordsOffline(
                         tint = colorResource(id = R.color.white)
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    openDialog.value = true
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_show_qr_code),
                         contentDescription = "Show QR code",
@@ -386,50 +399,22 @@ fun LeaderWordsOffline(
                                         }
                                     )
                                     .combinedClickable(
-                                        onClick = {},
+                                        onClick = { Toast.makeText(localContext, words[index], Toast.LENGTH_SHORT).show() },
                                         onLongClick = {
                                             if (!showCards.value) {
                                                 if (enabled[index]) {
                                                     enabled[index] = false
                                                     selectedColors[index] = 1
-                                                    if (turn.intValue == 1) {
-                                                        if (colorsNums[index] == 0) {
-                                                            turn.intValue = 2
-                                                            turnText.value = StringBuilder()
-                                                                .append("Turn")
-                                                                .append("→")
-                                                                .toString()
-                                                        } else if (colorsNums[index] == 1) {
-                                                            firstScore.intValue++
-                                                        } else if (colorsNums[index] == 2) {
-                                                            secondScore.intValue++
-                                                            turn.intValue = 2
-                                                            turnText.value = StringBuilder()
-                                                                .append("Turn")
-                                                                .append("→")
-                                                                .toString()
-                                                        }
-                                                    } else if (turn.intValue == 2) {
-                                                        if (colorsNums[index] == 0) {
-                                                            turn.intValue = 1
-                                                            turnText.value = StringBuilder()
-                                                                .append("←")
-                                                                .append("Turn")
-                                                                .toString()
-                                                        } else if (colorsNums[index] == 1) {
-                                                            firstScore.intValue++
-                                                            turn.intValue = 1
-                                                            turnText.value = StringBuilder()
-                                                                .append("←")
-                                                                .append("Turn")
-                                                                .toString()
-                                                        } else if (colorsNums[index] == 2) {
-                                                            secondScore.intValue++
-                                                        }
+                                                    if (colorsNums[index] == 0) {
+                                                        updateTurnText(turn, turnText, turnTextt, true)
                                                     }
+                                                    if ((turn.intValue == 1 && colorsNums[index] == 2) || (turn.intValue == 2 && colorsNums[index] == 1)) {
+                                                        updateTurnText(turn, turnText, turnTextt, true)
+                                                    }
+                                                    firstScore.intValue += if (colorsNums[index] == 1) 1 else 0
+                                                    secondScore.intValue += if (colorsNums[index] == 2) 1 else 0
                                                 }
                                             }
-                                            Log.i("PRESS", turn.intValue.toString())
                                         }
                                     ),
                                 contentAlignment = Alignment.Center
@@ -468,8 +453,25 @@ fun LeaderWordsOffline(
                 }
             }
         }
+        if (openDialog.value) {
+            val image = generateQrCode(
+                StringBuilder().append(words.joinToString(separator = ",")).append(";")
+                    .append(colorsNums.joinToString(separator = ",")).toString()
+            )!!
+            DialogWithImage(openDialog, image)
+        }
     }
 }
 
 fun darkerColor(color: Color) =
     Color(ColorUtils.blendARGB(color.toArgb(), Color.Black.toArgb(), 0.5f))
+
+fun updateTurnText(turn: MutableIntState, turnText: MutableState<String>, text: String, change: Boolean) {
+    if (turn.intValue == 1) {
+        turnText.value = StringBuilder().append(text).append("→").toString()
+        if (change) turn.intValue = 2
+    } else {
+        turnText.value = StringBuilder().append("←").append(text).toString()
+        if (change) turn.intValue = 1
+    }
+}

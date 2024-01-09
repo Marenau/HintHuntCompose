@@ -47,13 +47,18 @@
     <string name="fragment_player_menu_turn">Turn</string>
     <string name="fragment_player_turn">Ход</string>
 
+    <string name="fragment_leader_turn">Ход</string>
     <string name="fragment_leader_menu_turn">Turn</string>
     <string name="fragment_leader_menu_show_cards">Show cards</string>
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
+    <string name="fragment_leader_qr_leader">Лидер</string>
     <string name="fragment_leader_victory">Победа!</string>
     <string name="fragment_leader_winner_first">Первая команда победила!</string>
     <string name="fragment_leader_winner_second">Вторая команда победила!</string>
     <string name="fragment_leader_confirm_winner">Подтвердить</string>
+    <string name="fragment_leader_qr_player">Игрок</string>
+    <string name="fragment_connect_game_title">Присоединиться к игре</string>
+    <string name="fragment_connect_game_connect">Присоединиться</string>
 </resources>

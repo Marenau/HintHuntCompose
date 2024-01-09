@@ -3,14 +3,17 @@ package com.corylab.hinthuntcompose.ui.navgraph
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.corylab.hinthuntcompose.ui.screens.CreateGame
 import com.corylab.hinthuntcompose.ui.screens.Home
 import com.corylab.hinthuntcompose.ui.screens.LeaderWordsOffline
 import com.corylab.hinthuntcompose.ui.screens.Settings
 import com.corylab.hinthuntcompose.ui.application.HintHunt
+import com.corylab.hinthuntcompose.ui.screens.ConnectGame
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
 
@@ -19,7 +22,7 @@ fun Navigation(applicationContext: Context) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home")
     {
-        composable("leader")
+        composable(route = "leader")
         {
             LeaderWordsOffline(
                 navController = navController,
@@ -34,10 +37,34 @@ fun Navigation(applicationContext: Context) {
                         applicationContext,
                         HintHunt.repository
                     )
-                )
+                ),
+                data = ""
             )
         }
-        composable("creategame") {
+        composable(
+            route = "leader/{data}",
+            arguments = listOf(navArgument("data") { type = NavType.StringType })
+        )
+        {
+            val data = it.arguments?.getString("data")!!
+            LeaderWordsOffline(
+                navController = navController,
+                wViewModel = viewModel(
+                    factory = WordViewModel.WordViewModelFactory(
+                        applicationContext,
+                        HintHunt.repository
+                    )
+                ),
+                spViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
+                        applicationContext,
+                        HintHunt.repository
+                    )
+                ),
+                data = data
+            )
+        }
+        composable("create_game") {
             CreateGame(
                 navController = navController,
                 mViewModel = viewModel(
@@ -61,6 +88,9 @@ fun Navigation(applicationContext: Context) {
         }
         composable("home") {
             Home(navController)
+        }
+        composable("connect_game") {
+            ConnectGame(navController = navController)
         }
     }
 }

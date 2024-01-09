@@ -181,7 +181,6 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                 }
             }
         }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
