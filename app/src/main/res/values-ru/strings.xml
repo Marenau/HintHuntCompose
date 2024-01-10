@@ -42,9 +42,6 @@
     <string name="fragment_create_game_cranberries_in_moss">Брусника во мхе</string>
     <string name="fragment_create_game_create">Создать</string>
 
-    <string name="fragment_player_menu_information">Info</string>
-    <string name="fragment_player_menu_home">Home</string>
-    <string name="fragment_player_menu_turn">Turn</string>
     <string name="fragment_player_turn">Ход</string>
 
     <string name="fragment_leader_turn">Ход</string>
@@ -53,12 +50,30 @@
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
-    <string name="fragment_leader_qr_leader">Лидер</string>
     <string name="fragment_leader_victory">Победа!</string>
     <string name="fragment_leader_winner_first">Первая команда победила!</string>
     <string name="fragment_leader_winner_second">Вторая команда победила!</string>
-    <string name="fragment_leader_confirm_winner">Подтвердить</string>
-    <string name="fragment_leader_qr_player">Игрок</string>
+    <string name="fragment_leader_confirm_winner">OK</string>
+
     <string name="fragment_connect_game_title">Присоединиться к игре</string>
     <string name="fragment_connect_game_connect">Присоединиться</string>
+    <string name="fragment_connect_game_choice_text">Выберите свою роль.</string>
+    <string name="fragment_connect_game_leader">Лидер</string>
+    <string name="fragment_connect_game_player">Игрок</string>
+    <string name="fragment_connect_game_choice_title">Присоединиться</string>
+    <string name="fragment_player_victory">Победа!</string>
+    <string name="fragment_player_winner_first">Первая команда победила!</string>
+    <string name="fragment_player_winner_second">Вторая команда победила!</string>
+    <string name="fragment_player_confirm_winner">OK</string>
+    <string name="fragment_leader_warning">Осторожно!</string>
+    <string name="fragment_leader_confirm_shuffle_text">Вы уверены, что хотите поменять карточки?</string>
+    <string name="fragment_leader_confirm_shuffle_no">Нет</string>
+    <string name="fragment_leader_confirm_shuffle_yes">Да</string>
+    <string name="fragment_leader_confirm_return_home_text">Вы точно хотите вернуться на главный экран?</string>
+    <string name="fragment_leader_confirm_return_home_no">Нет</string>
+    <string name="fragment_leader_confirm_return_home_yes">Да</string>
+    <string name="fragment_player_warning">Осторожно!</string>
+    <string name="fragment_player_confirm_return_home_text">Вы точно хотите вернуться на главный экран?</string>
+    <string name="fragment_player_confirm_return_home_yes">Да</string>
+    <string name="fragment_player_confirm_return_home_no">Нет</string>
 </resources>

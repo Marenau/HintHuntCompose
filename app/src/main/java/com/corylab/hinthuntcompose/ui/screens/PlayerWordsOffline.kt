@@ -26,8 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -47,98 +44,40 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
-import com.corylab.hinthuntcompose.data.qrcode.generateQrCode
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateBoolListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateIntListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateNumsListOf
 import com.corylab.hinthuntcompose.data.remember.rememberMutableStateWordListOf
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithChoice
-import com.corylab.hinthuntcompose.ui.dialog.DialogWithImage
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithText
 import com.corylab.hinthuntcompose.ui.theme.MainText
-import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
-import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
-import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun LeaderWordsOffline(
+fun PlayerWordsOffline(
     navController: NavController,
-    wViewModel: WordViewModel,
-    spViewModel: SharedPreferencesViewModel,
     data: String
 ) {
     val localContext = LocalContext.current
 
     val words = rememberMutableStateWordListOf(
-        if (data.isNotEmpty()) {
-            data.substring(0, data.indexOfFirst { it == ';' }).split(',')
-        } else wViewModel.getWords()
+        data.substring(0, data.indexOfFirst { it == ';' }).split(',')
     )
-
-    val quantity =
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
-
     val size = words.size
-    val firstNumOfCard = rememberSaveable {
-        when (words.size) {
-            18 -> mutableIntStateOf(5)
-            24 -> mutableIntStateOf(7)
-            else -> mutableIntStateOf(9)
-        }
-    }
-
-    val secondNumOfCard = rememberSaveable {
-        when (words.size) {
-            18 -> mutableIntStateOf(5)
-            24 -> mutableIntStateOf(7)
-            else -> mutableIntStateOf(9)
-        }
-    }
-
-    val firstScore = rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val secondScore = rememberSaveable {
-        mutableIntStateOf(0)
-    }
-
-    val turn = rememberSaveable {
-        if (Random.nextInt(2) == 1) {
-            firstNumOfCard.intValue++
-            mutableIntStateOf(1)
-        } else {
-            secondNumOfCard.intValue++
-            mutableIntStateOf(2)
-        }
-    }
-
-    val wordTurn = stringResource(id = R.string.fragment_leader_turn)
-    val turnText = rememberSaveable {
-        mutableStateOf(
-            if (turn.intValue == 1) StringBuilder().append("←").append(wordTurn)
-                .toString() else StringBuilder().append(wordTurn).append("→").toString()
-        )
-    }
 
     val colorsNums = rememberMutableStateNumsListOf(
-        if (data.isNotEmpty()) {
-            data.substring(data.indexOfFirst { it == ';' } + 1, data.indexOfLast { it == ';' })
-                .split(',').map { it.toInt() }
-        } else wViewModel.createColorsNums(size, firstNumOfCard.intValue, secondNumOfCard.intValue)
+        data.substring(data.indexOfFirst { it == ';' } + 1, data.indexOfLast { it == ';' })
+            .split(',')
+            .map { it.toInt() }
     )
 
-    if (data.isNotEmpty()) {
-        firstNumOfCard.intValue = colorsNums.count { it == 1 }
-        secondNumOfCard.intValue = colorsNums.count { it == 2 }
-    }
+    val firstNumOfCard = rememberSaveable { mutableIntStateOf(colorsNums.count { it == 1 }) }
+    val secondNumOfCard = rememberSaveable { mutableIntStateOf(colorsNums.count { it == 2 }) }
 
     val neutralColor = colorResource(id = R.color.neutral)
-    val numOfColors = if (data.isNotEmpty()) data[data.length - 1].digitToInt() else spViewModel.getInt("teams_color")
-    val (firstTeamColor, secondTeamColor) = when (numOfColors) {
+    val (firstTeamColor, secondTeamColor) = when (data[data.length - 1].digitToInt()) {
         0 -> Pair(
             colorResource(id = R.color.wild_berries_color1),
             colorResource(id = R.color.wild_berries_color2)
@@ -170,6 +109,28 @@ fun LeaderWordsOffline(
         )
     }
 
+    val quantity =
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
+
+    val firstScore = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    val secondScore = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    val turn = rememberSaveable {
+        mutableIntStateOf(if (firstNumOfCard.intValue > secondNumOfCard.intValue) 1 else 2)
+    }
+
+    val wordTurn = stringResource(id = R.string.fragment_player_turn)
+    val turnText = rememberSaveable {
+        mutableStateOf(
+            if (turn.intValue == 1) StringBuilder().append("←").append(wordTurn)
+                .toString() else StringBuilder().append(wordTurn).append("→").toString()
+        )
+    }
+
     val selectedColors = rememberMutableStateIntListOf(size)
     val colorMap = mapOf(
         0 to neutralColor,
@@ -178,15 +139,7 @@ fun LeaderWordsOffline(
         3 to colorResource(id = R.color.black)
     )
 
-    val showCards = rememberSaveable {
-        mutableStateOf(false)
-    }
-
     val enabled = rememberMutableStateBoolListOf(size)
-
-    val openDialog = rememberSaveable { mutableStateOf(false) }
-
-    val openShuffleDialog = rememberSaveable { mutableStateOf(false) }
 
     val openHomeDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -194,23 +147,14 @@ fun LeaderWordsOffline(
 
     val blackPress = rememberSaveable { mutableStateOf(false) }
 
-    if (openDialog.value) {
-        val image = generateQrCode(
-            StringBuilder().append(words.joinToString(separator = ",")).append(";")
-                .append(colorsNums.joinToString(separator = ",")).append(";")
-                .append(spViewModel.getInt("teams_color")).toString()
-        )!!
-        DialogWithImage(openDialog, image)
-    }
-
     if (firstScore.intValue == firstNumOfCard.intValue) {
         if (openWinnerDialog.value) {
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_leader_victory),
-                text = stringResource(id = R.string.fragment_leader_winner_first),
-                buttonText = stringResource(id = R.string.fragment_leader_confirm_winner),
+                title = stringResource(id = R.string.fragment_player_victory),
+                text = stringResource(id = R.string.fragment_player_winner_first),
+                buttonText = stringResource(id = R.string.fragment_player_confirm_winner),
                 teamColor = firstTeamColor
             )
         }
@@ -221,9 +165,9 @@ fun LeaderWordsOffline(
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_leader_victory),
-                text = stringResource(id = R.string.fragment_leader_winner_second),
-                buttonText = stringResource(id = R.string.fragment_leader_confirm_winner),
+                title = stringResource(id = R.string.fragment_player_victory),
+                text = stringResource(id = R.string.fragment_player_winner_second),
+                buttonText = stringResource(id = R.string.fragment_player_confirm_winner),
                 teamColor = secondTeamColor
             )
         }
@@ -234,18 +178,18 @@ fun LeaderWordsOffline(
             val winner: String
             val winnerColor: Color
             if (turn.intValue == 1) {
-                winner = stringResource(id = R.string.fragment_leader_winner_second)
+                winner = stringResource(id = R.string.fragment_player_winner_second)
                 winnerColor = secondTeamColor
             } else {
-                winner = stringResource(id = R.string.fragment_leader_winner_first)
+                winner = stringResource(id = R.string.fragment_player_winner_first)
                 winnerColor = firstTeamColor
             }
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_leader_victory),
+                title = stringResource(id = R.string.fragment_player_victory),
                 text = winner,
-                buttonText = stringResource(id = R.string.fragment_leader_confirm_winner),
+                buttonText = stringResource(id = R.string.fragment_player_confirm_winner),
                 teamColor = winnerColor
             )
         }
@@ -266,51 +210,6 @@ fun LeaderWordsOffline(
             })
     }
 
-    if (openShuffleDialog.value) {
-        DialogWithChoice(
-            onDismiss = { openShuffleDialog.value = false },
-            title = stringResource(id = R.string.fragment_leader_warning),
-            text = stringResource(id = R.string.fragment_leader_confirm_shuffle_text),
-            firstButtonText = stringResource(id = R.string.fragment_leader_confirm_shuffle_no),
-            secondButtonText = stringResource(id = R.string.fragment_leader_confirm_shuffle_yes),
-            firstButtonOnClick = { openShuffleDialog.value = false },
-            secondButtonOnClick = {
-                if (showCards.value) {
-                    showCards.value = false
-                }
-                firstScore.intValue = 0
-                secondScore.intValue = 0
-                selectedColors.fill(0)
-                words.clear()
-                words.addAll(wViewModel.getWords())
-                enabled.fill(true)
-                val min = minOf(firstNumOfCard.intValue, secondNumOfCard.intValue)
-                firstNumOfCard.intValue = min
-                secondNumOfCard.intValue = min
-                turn.intValue = if (Random.nextInt(2) == 1) {
-                    firstNumOfCard.intValue++
-                    1
-                } else {
-                    secondNumOfCard.intValue++
-                    2
-                }
-                turnText.value =
-                    if (turn.intValue == 1) StringBuilder().append("←").append(wordTurn)
-                        .toString() else StringBuilder().append(wordTurn).append("→")
-                        .toString()
-                colorsNums.clear()
-                colorsNums.addAll(
-                    wViewModel.createColorsNums(
-                        size,
-                        firstNumOfCard.intValue,
-                        secondNumOfCard.intValue
-                    )
-                )
-                openShuffleDialog.value = false
-            }
-        )
-    }
-
     Scaffold(bottomBar = {
         BottomAppBar(
             modifier = Modifier
@@ -323,21 +222,10 @@ fun LeaderWordsOffline(
                     .padding(horizontal = 16.dp, vertical = 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = {
-                    showCards.value = !showCards.value
-                }) {
+                IconButton(onClick = {}) {
                     Icon(
-                        painter = painterResource(id = R.drawable.icon_show_cards),
-                        contentDescription = "Show cards",
-                        tint = colorResource(id = R.color.white)
-                    )
-                }
-                IconButton(onClick = {
-                    updateTurnText(turn, turnText, wordTurn, true)
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_turn),
-                        contentDescription = "Turn",
+                        painter = painterResource(id = R.drawable.icon_info),
+                        contentDescription = "Info",
                         tint = colorResource(id = R.color.white)
                     )
                 }
@@ -348,22 +236,10 @@ fun LeaderWordsOffline(
                         tint = colorResource(id = R.color.white)
                     )
                 }
-                if (data.isEmpty()) {
-                    IconButton(onClick = { openShuffleDialog.value = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_mix_cards),
-                            contentDescription = "Mix cards",
-                            tint = colorResource(id = R.color.white)
-                        )
-                    }
-                }
-
-                IconButton(onClick = {
-                    openDialog.value = true
-                }) {
+                IconButton(onClick = { updateTurnText(turn, turnText, wordTurn, true) }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.icon_show_qr_code),
-                        contentDescription = "Show QR code",
+                        painter = painterResource(id = R.drawable.icon_confirm_turn),
+                        contentDescription = "Turn",
                         tint = colorResource(id = R.color.white)
                     )
                 }
@@ -480,16 +356,10 @@ fun LeaderWordsOffline(
                                     .padding(end = 8.dp)
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(
-                                        if (showCards.value) {
-                                            if (selectedColors[index] == 1)
-                                                darkerColor(colorMap[colorsNums[index]]!!)
-                                            else colorMap[colorsNums[index]]!!
+                                        if (selectedColors[index] == 1) {
+                                            colorMap[colorsNums[index]]!!
                                         } else {
-                                            if (selectedColors[index] == 1) {
-                                                colorMap[colorsNums[index]]!!
-                                            } else {
-                                                colorResource(id = R.color.dark_gray)
-                                            }
+                                            colorResource(id = R.color.dark_gray)
                                         }
                                     )
                                     .combinedClickable(
@@ -503,37 +373,35 @@ fun LeaderWordsOffline(
                                                 .show()
                                         },
                                         onLongClick = {
-                                            if (!showCards.value) {
-                                                if (enabled[index]) {
-                                                    enabled[index] = false
-                                                    selectedColors[index] = 1
-                                                    if (colorsNums[index] == 0) {
-                                                        updateTurnText(
-                                                            turn,
-                                                            turnText,
-                                                            wordTurn,
-                                                            true
-                                                        )
-                                                    }
-                                                    if ((turn.intValue == 1 && colorsNums[index] == 2) || (turn.intValue == 2 && colorsNums[index] == 1)) {
-                                                        updateTurnText(
-                                                            turn,
-                                                            turnText,
-                                                            wordTurn,
-                                                            true
-                                                        )
-                                                    }
-                                                    firstScore.intValue += if (colorsNums[index] == 1) 1 else 0
-                                                    if (firstScore.intValue == firstNumOfCard.intValue) openWinnerDialog.value =
+                                            if (enabled[index]) {
+                                                enabled[index] = false
+                                                selectedColors[index] = 1
+                                                if (colorsNums[index] == 0) {
+                                                    updateTurnText(
+                                                        turn,
+                                                        turnText,
+                                                        wordTurn,
                                                         true
-                                                    secondScore.intValue += if (colorsNums[index] == 2) 1 else 0
-                                                    if (secondScore.intValue == secondNumOfCard.intValue) openWinnerDialog.value =
+                                                    )
+                                                }
+                                                if ((turn.intValue == 1 && colorsNums[index] == 2) || (turn.intValue == 2 && colorsNums[index] == 1)) {
+                                                    updateTurnText(
+                                                        turn,
+                                                        turnText,
+                                                        wordTurn,
                                                         true
+                                                    )
+                                                }
+                                                firstScore.intValue += if (colorsNums[index] == 1) 1 else 0
+                                                if (firstScore.intValue == firstNumOfCard.intValue) openWinnerDialog.value =
+                                                    true
+                                                secondScore.intValue += if (colorsNums[index] == 2) 1 else 0
+                                                if (secondScore.intValue == secondNumOfCard.intValue) openWinnerDialog.value =
+                                                    true
 
-                                                    if (colorsNums[index] == 3) {
-                                                        blackPress.value = true
-                                                        openWinnerDialog.value = true
-                                                    }
+                                                if (colorsNums[index] == 3) {
+                                                    blackPress.value = true
+                                                    openWinnerDialog.value = true
                                                 }
                                             }
                                         }
@@ -548,24 +416,9 @@ fun LeaderWordsOffline(
                                     softWrap = false,
                                     style = MainText,
                                     fontSize = 15.sp,
-                                    color =
-                                    if (showCards.value) {
-                                        if (selectedColors[index] == 1)
-                                            darkerColor(
-                                                if (colorMap[colorsNums[index]]!! == neutralColor)
-                                                    colorResource(id = R.color.dark_gray)
-                                                else colorResource(id = R.color.white)
-                                            )
-                                        else {
-                                            if (colorMap[colorsNums[index]]!! == neutralColor)
-                                                colorResource(id = R.color.dark_gray)
-                                            else colorResource(id = R.color.white)
-                                        }
-                                    } else {
-                                        if (selectedColors[index] == 1 && colorMap[colorsNums[index]]!! == neutralColor) {
-                                            colorResource(id = R.color.dark_gray)
-                                        } else colorResource(id = R.color.white)
-                                    }
+                                    color = if (selectedColors[index] == 1 && colorMap[colorsNums[index]]!! == neutralColor) {
+                                        colorResource(id = R.color.dark_gray)
+                                    } else colorResource(id = R.color.white)
                                 )
                             }
                             i++
@@ -574,23 +427,5 @@ fun LeaderWordsOffline(
                 }
             }
         }
-    }
-}
-
-fun darkerColor(color: Color) =
-    Color(ColorUtils.blendARGB(color.toArgb(), Color.Black.toArgb(), 0.5f))
-
-fun updateTurnText(
-    turn: MutableIntState,
-    turnText: MutableState<String>,
-    text: String,
-    change: Boolean
-) {
-    if (turn.intValue == 1) {
-        turnText.value = StringBuilder().append(text).append("→").toString()
-        if (change) turn.intValue = 2
-    } else {
-        turnText.value = StringBuilder().append("←").append(text).toString()
-        if (change) turn.intValue = 1
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +35,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.data.qrcode.QRCodeAnalyzer
+import com.corylab.hinthuntcompose.ui.dialog.DialogWithChoice
 import com.corylab.hinthuntcompose.ui.theme.Title
 
 @Composable
@@ -62,6 +64,8 @@ fun ConnectGame(navController: NavController) {
     LaunchedEffect(key1 = true) {
         launcher.launch(Manifest.permission.CAMERA)
     }
+
+    val openDialog = rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -100,7 +104,7 @@ fun ConnectGame(navController: NavController) {
                     previewView
                 })
         }
-        if (qrText.value.isNotEmpty()) {
+        if (qrText.value.isNotEmpty() && qrText.value.count { it == ';' } == 2) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -110,11 +114,25 @@ fun ConnectGame(navController: NavController) {
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter),
                     text = stringResource(id = R.string.fragment_connect_game_connect),
-                    onClick = {
-                        navController.navigate("leader/${qrText.value}")
-                    }
+                    onClick = { openDialog.value = true }
                 )
             }
+        }
+        if (openDialog.value) {
+            DialogWithChoice(
+                title = stringResource(id = R.string.fragment_connect_game_choice_title),
+                text = stringResource(id = R.string.fragment_connect_game_choice_text),
+                firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
+                secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
+                firstButtonOnClick = {
+                    navController.popBackStack()
+                    navController.navigate("leader/${qrText.value}")
+                },
+                secondButtonOnClick = {
+                    navController.popBackStack()
+                    navController.navigate("player/${qrText.value}")
+                }
+            )
         }
     }
 }

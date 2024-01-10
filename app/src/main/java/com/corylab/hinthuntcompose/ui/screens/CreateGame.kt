@@ -21,21 +21,17 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -66,12 +62,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         mutableStateOf(gameMods[mode])
     }
 
-    val gameType = listOf(
+    val gameTypes = listOf(
         stringResource(id = R.string.fragment_create_game_game_type_words),
         stringResource(id = R.string.fragment_create_game_game_type_illustrations)
     )
     val (typeSelectedOption, typeOnOptionSelected) = remember {
-        mutableStateOf(gameType[type])
+        mutableStateOf(gameTypes[type])
     }
 
     val sizes = listOf(
@@ -109,9 +105,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_cranberries_in_moss)
     )
     val (teamsColorsSelectedOption, teamsColorsOnOptionSelected) = remember {
-        mutableStateOf(
-            teamsColors[teamsColor]
-        )
+        mutableStateOf(teamsColors[teamsColor])
     }
 
     Column(
@@ -199,10 +193,10 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             ) {
-                for (i in gameType.indices) {
+                for (i in gameTypes.indices) {
                     FilterChip(
-                        selected = (gameType[i] == typeSelectedOption),
-                        onClick = { typeOnOptionSelected(gameType[i]) },
+                        selected = (gameTypes[i] == typeSelectedOption),
+                        onClick = { typeOnOptionSelected(gameTypes[i]) },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
@@ -219,7 +213,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                         ),
                         label = {
                             Text(
-                                text = gameType[i],
+                                text = gameTypes[i],
                                 style = MainText,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -480,25 +474,25 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
             Button(
                 onClick = {
                     mViewModel.putInt("game_mode", when(modeSelectedOption) {
-                        "Offline" -> 0
+                        gameMods[0] -> 0
                         else -> 1
                     })
                     mViewModel.putInt("game_type", when(typeSelectedOption) {
-                        "Words" -> 0
+                        gameTypes[0] -> 0
                         else -> 1
                     })
                     mViewModel.putInt("size", sizeSelectedOption.toInt())
                     mViewModel.putInt("complexity", when(complexitySelectedOption) {
-                        "\uD83E\uDD0D" -> 0
-                        "\uD83E\uDD0D \uD83E\uDD0D" -> 1
+                        complexities[0] -> 0
+                        complexities[1] -> 1
                         else -> 2
                     })
                     mViewModel.putInt("teams_color", when (teamsColorsSelectedOption) {
-                        "Wild berries" -> 0
-                        "Mustard field" -> 1
-                        "Carrot freshness" -> 2
-                        "Noble Saffron" -> 3
-                        "Lilac at midnight" -> 4
+                        teamsColors[0] -> 0
+                        teamsColors[1] -> 1
+                        teamsColors[2] -> 2
+                        teamsColors[3] -> 3
+                        teamsColors[4] -> 4
                         else -> 5
                     })
                     navController.navigate("leader")

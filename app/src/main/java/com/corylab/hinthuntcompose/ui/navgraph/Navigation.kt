@@ -14,6 +14,7 @@ import com.corylab.hinthuntcompose.ui.screens.LeaderWordsOffline
 import com.corylab.hinthuntcompose.ui.screens.Settings
 import com.corylab.hinthuntcompose.ui.application.HintHunt
 import com.corylab.hinthuntcompose.ui.screens.ConnectGame
+import com.corylab.hinthuntcompose.ui.screens.PlayerWordsOffline
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
 
@@ -61,6 +62,17 @@ fun Navigation(applicationContext: Context) {
                         HintHunt.repository
                     )
                 ),
+                data = data
+            )
+        }
+        composable(
+            route = "player/{data}",
+            arguments = listOf(navArgument("data") { type = NavType.StringType })
+        )
+        {
+            val data = it.arguments?.getString("data")!!
+            PlayerWordsOffline(
+                navController = navController,
                 data = data
             )
         }

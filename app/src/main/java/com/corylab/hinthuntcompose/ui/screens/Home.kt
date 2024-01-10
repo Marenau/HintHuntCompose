@@ -92,7 +92,7 @@ fun Home(navController: NavController) {
                     .width(250.dp)
                     .align(Alignment.BottomCenter),
                 text = stringResource(id = R.string.fragment_home_authors),
-                onClick = { /* Обработка нажатия */ }
+                onClick = { }
             )
         }
     }
@@ -104,16 +104,14 @@ fun ButtonWithText(
     text: String,
     onClick: () -> Unit
 ) {
-    val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = colorResource(id = R.color.light_gray),
-        contentColor = colorResource(id = R.color.white)
-    )
-    val cornerShape = RoundedCornerShape(6.dp)
     Button(
         onClick = onClick,
         modifier = modifier,
-        shape = cornerShape,
-        colors = buttonColors
+        shape = RoundedCornerShape(6.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(id = R.color.light_gray),
+            contentColor = colorResource(id = R.color.white)
+        )
     ) {
         Text(text = text, style = MainText)
     }
