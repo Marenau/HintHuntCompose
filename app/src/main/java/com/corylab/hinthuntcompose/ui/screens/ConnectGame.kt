@@ -36,11 +36,16 @@ import androidx.navigation.NavController
 import com.corylab.hinthuntcompose.R
 import com.corylab.hinthuntcompose.data.qrcode.QRCodeAnalyzer
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithChoice
+import com.corylab.hinthuntcompose.ui.theme.MainText
 import com.corylab.hinthuntcompose.ui.theme.Title
 
 @Composable
 fun ConnectGame(navController: NavController) {
-    val qrText = remember {
+    val qrText = rememberSaveable {
+        mutableStateOf("")
+    }
+
+    val unsupportedText = rememberSaveable {
         mutableStateOf("")
     }
 
@@ -67,6 +72,23 @@ fun ConnectGame(navController: NavController) {
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
+    if (openDialog.value) {
+        DialogWithChoice(
+            title = stringResource(id = R.string.fragment_connect_game_choice_title),
+            text = stringResource(id = R.string.fragment_connect_game_choice_text),
+            firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
+            secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
+            firstButtonOnClick = {
+                navController.popBackStack()
+                navController.navigate("leader/${qrText.value}")
+            },
+            secondButtonOnClick = {
+                navController.popBackStack()
+                navController.navigate("player/${qrText.value}")
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +106,8 @@ fun ConnectGame(navController: NavController) {
             AndroidView(modifier = Modifier
                 .padding(top = 24.dp)
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(6.dp)),
+                .clip(RoundedCornerShape(6.dp))
+                .align(Alignment.CenterHorizontally),
                 factory = { context ->
                     val previewView = PreviewView(context)
                     val preview = Preview.Builder().build()
@@ -104,35 +127,32 @@ fun ConnectGame(navController: NavController) {
                     previewView
                 })
         }
-        if (qrText.value.isNotEmpty() && qrText.value.count { it == ';' } == 2) {
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Text(
+                text = unsupportedText.value,
+                style = MainText,
                 modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                ButtonWithText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
-                    text = stringResource(id = R.string.fragment_connect_game_connect),
-                    onClick = { openDialog.value = true }
-                )
-            }
-        }
-        if (openDialog.value) {
-            DialogWithChoice(
-                title = stringResource(id = R.string.fragment_connect_game_choice_title),
-                text = stringResource(id = R.string.fragment_connect_game_choice_text),
-                firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
-                secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
-                firstButtonOnClick = {
-                    navController.popBackStack()
-                    navController.navigate("leader/${qrText.value}")
-                },
-                secondButtonOnClick = {
-                    navController.popBackStack()
-                    navController.navigate("player/${qrText.value}")
-                }
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp)
             )
+            if (qrText.value.isNotEmpty()) {
+                if (qrText.value.count { it == ';' } == 2) {
+                    unsupportedText.value = ""
+                    ButtonWithText(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                        text = stringResource(id = R.string.fragment_connect_game_connect),
+                        onClick = { openDialog.value = true }
+                    )
+                } else {
+                    unsupportedText.value =
+                        stringResource(id = R.string.fragment_connect_unsupported_qr)
+                }
+            }
         }
     }
 }

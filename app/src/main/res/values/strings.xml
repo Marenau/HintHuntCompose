@@ -71,4 +71,5 @@
     <string name="fragment_connect_game_choice_text">Choose your role.</string>
     <string name="fragment_connect_game_leader">Leader</string>
     <string name="fragment_connect_game_player">Player</string>
+    <string name="fragment_connect_unsupported_qr">Unsupported QR code.</string>
 </resources>

@@ -154,7 +154,7 @@ fun DialogWithChoice(
                     style = MainText,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp
                 )

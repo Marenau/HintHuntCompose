@@ -76,4 +76,5 @@
     <string name="fragment_player_confirm_return_home_text">Are you sure you want to return to the home screen?</string>
     <string name="fragment_player_confirm_return_home_yes">Yes</string>
     <string name="fragment_player_confirm_return_home_no">No</string>
+    <string name="fragment_connect_unsupported_qr">Unsupported QR code.</string>
 </resources>
