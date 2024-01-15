@@ -5,17 +5,20 @@ import com.corylab.hinthuntcompose.R
 import java.util.Random
 
 class WordCardSource {
-    fun getEasyWords(size: Int) =
+    fun getEasyWords(size: Int, lang: Int) = if (lang == 1)
         HintHunt.context.resources.openRawResource(R.raw.easy_words).bufferedReader().readLines()
-            .shuffled().take(size)
+            .shuffled().take(size) else  HintHunt.context.resources.openRawResource(R.raw.easy_words_en).bufferedReader().readLines()
+        .shuffled().take(size)
 
-    fun getMediumWords(size: Int) =
+    fun getMediumWords(size: Int, lang: Int) =if (lang == 1)
         HintHunt.context.resources.openRawResource(R.raw.medium_words).bufferedReader().readLines()
-            .shuffled().take(size)
+            .shuffled().take(size) else HintHunt.context.resources.openRawResource(R.raw.medium_words_en).bufferedReader().readLines()
+        .shuffled().take(size)
 
-    fun getHardWords(size: Int) =
+    fun getHardWords(size: Int, lang: Int) = if (lang == 1)
         HintHunt.context.resources.openRawResource(R.raw.hard_words).bufferedReader().readLines()
-            .shuffled().take(size)
+            .shuffled().take(size) else HintHunt.context.resources.openRawResource(R.raw.hard_words_en).bufferedReader().readLines()
+        .shuffled().take(size)
 
     fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int): List<Int> {
         val colorsNum = MutableList(size) { 0 }

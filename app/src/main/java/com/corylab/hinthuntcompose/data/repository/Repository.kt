@@ -20,11 +20,13 @@ class Repository(application: Context) {
 
     private fun getSize() = getInt("size")
 
-    private fun getEasyWords() = wordCardSource.getEasyWords(getSize())
+    private fun getLanguage() = getInt("language")
 
-    private fun getMediumWords() = wordCardSource.getMediumWords(getSize())
+    private fun getEasyWords() = wordCardSource.getEasyWords(getSize(), getLanguage())
 
-    private fun getHardWords() = wordCardSource.getHardWords(getSize())
+    private fun getMediumWords() = wordCardSource.getMediumWords(getSize(), getLanguage())
+
+    private fun getHardWords() = wordCardSource.getHardWords(getSize(), getLanguage())
 
     fun getWords(): List<String> {
         val words: List<String> = when (sharedPreferencesSource.getInt("complexity")) {

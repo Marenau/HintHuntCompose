@@ -34,7 +34,6 @@ Puzzle
 Rain
 Rainbow
 Raindrop
-Sand dollar
 Sandbox
 Sandcastle
 Seashell
