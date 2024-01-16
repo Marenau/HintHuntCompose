@@ -79,8 +79,7 @@ fun Home(navController: NavController) {
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_settings),
-            onClick = {
-                navController.navigate("settings") }
+            onClick = { navController.navigate("settings") }
         )
 
         Box(
@@ -92,7 +91,7 @@ fun Home(navController: NavController) {
                     .width(250.dp)
                     .align(Alignment.BottomCenter),
                 text = stringResource(id = R.string.fragment_home_authors),
-                onClick = { }
+                onClick = { navController.navigate("authors") }
             )
         }
     }

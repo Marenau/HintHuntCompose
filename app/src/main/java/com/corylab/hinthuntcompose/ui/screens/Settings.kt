@@ -131,7 +131,7 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                 fontSize = 18.sp
             )
 
-            val languages = listOf("en","ru")
+            val languages = listOf("en", "ru")
             val context = LocalContext.current
             val (selectedLanguage, onLanguageSelected) = remember { mutableStateOf(languages[language]) }
 
@@ -147,9 +147,11 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                         onClick = {
                             onLanguageSelected(languageCode)
                             mViewModel.putInt("language", if (languageCode == "en") 0 else 1)
-                            localeSelection(context = context, localeTag = Locale(languageCode).toLanguageTag())
-
-                                  },
+                            localeSelection(
+                                context = context,
+                                localeTag = Locale(languageCode).toLanguageTag()
+                            )
+                        },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
@@ -195,6 +197,7 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
         }
     }
 }
+
 fun localeSelection(context: Context, localeTag: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         context.getSystemService(LocaleManager::class.java).applicationLocales =

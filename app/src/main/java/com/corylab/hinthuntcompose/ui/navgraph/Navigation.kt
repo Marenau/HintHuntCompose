@@ -13,6 +13,7 @@ import com.corylab.hinthuntcompose.ui.screens.Home
 import com.corylab.hinthuntcompose.ui.screens.LeaderWordsOffline
 import com.corylab.hinthuntcompose.ui.screens.Settings
 import com.corylab.hinthuntcompose.ui.application.HintHunt
+import com.corylab.hinthuntcompose.ui.screens.Authors
 import com.corylab.hinthuntcompose.ui.screens.ConnectGame
 import com.corylab.hinthuntcompose.ui.screens.PlayerWordsOffline
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
@@ -102,7 +103,10 @@ fun Navigation(applicationContext: Context) {
             Home(navController)
         }
         composable("connect_game") {
-            ConnectGame(navController = navController)
+            ConnectGame(navController)
+        }
+        composable("authors") {
+            Authors(navController)
         }
     }
 }

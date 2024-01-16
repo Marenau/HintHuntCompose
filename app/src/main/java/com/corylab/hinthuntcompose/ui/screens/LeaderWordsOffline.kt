@@ -137,7 +137,8 @@ fun LeaderWordsOffline(
     }
 
     val neutralColor = colorResource(id = R.color.neutral)
-    val numOfColors = if (data.isNotEmpty()) data[data.length - 1].digitToInt() else spViewModel.getInt("teams_color")
+    val numOfColors =
+        if (data.isNotEmpty()) data[data.length - 1].digitToInt() else spViewModel.getInt("teams_color")
     val (firstTeamColor, secondTeamColor) = when (numOfColors) {
         0 -> Pair(
             colorResource(id = R.color.wild_berries_color1),
@@ -243,7 +244,7 @@ fun LeaderWordsOffline(
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_leader_victory),
+                title = stringResource(id = R.string.fragment_leader_defeat),
                 text = winner,
                 buttonText = stringResource(id = R.string.fragment_leader_confirm_winner),
                 teamColor = winnerColor
@@ -275,11 +276,10 @@ fun LeaderWordsOffline(
             secondButtonText = stringResource(id = R.string.fragment_leader_confirm_shuffle_yes),
             firstButtonOnClick = { openShuffleDialog.value = false },
             secondButtonOnClick = {
-                if (showCards.value) {
-                    showCards.value = false
-                }
+                if (showCards.value) showCards.value = false
                 firstScore.intValue = 0
                 secondScore.intValue = 0
+                blackPress.value = false
                 selectedColors.fill(0)
                 words.clear()
                 words.addAll(wViewModel.getWords())

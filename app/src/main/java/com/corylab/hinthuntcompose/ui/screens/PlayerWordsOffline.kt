@@ -187,7 +187,7 @@ fun PlayerWordsOffline(
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_player_victory),
+                title = stringResource(id = R.string.fragment_player_defeat),
                 text = winner,
                 buttonText = stringResource(id = R.string.fragment_player_confirm_winner),
                 teamColor = winnerColor

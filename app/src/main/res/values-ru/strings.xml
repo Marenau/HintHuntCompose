@@ -51,6 +51,7 @@
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
     <string name="fragment_leader_victory">Победа!</string>
+    <string name="fragment_leader_defeat">Поражение!</string>
     <string name="fragment_leader_winner_first">Первая команда победила!</string>
     <string name="fragment_leader_winner_second">Вторая команда победила!</string>
     <string name="fragment_leader_confirm_winner">OK</string>
@@ -62,6 +63,7 @@
     <string name="fragment_connect_game_player">Игрок</string>
     <string name="fragment_connect_game_choice_title">Присоединиться</string>
     <string name="fragment_player_victory">Победа!</string>
+    <string name="fragment_player_defeat">Поражение!</string>
     <string name="fragment_player_winner_first">Первая команда победила!</string>
     <string name="fragment_player_winner_second">Вторая команда победила!</string>
     <string name="fragment_player_confirm_winner">OK</string>
@@ -77,4 +79,22 @@
     <string name="fragment_player_confirm_return_home_yes">Да</string>
     <string name="fragment_player_confirm_return_home_no">Нет</string>
     <string name="fragment_connect_unsupported_qr">Неподдерживаемый QR-код.</string>
+    <string name="fragment_authors_title">Авторы</string>
+    <string name="fragment_authors_project_manager">Менеджер проекта</string>
+    <string name="fragment_authors_main_developer">Главный разработчик</string>
+    <string name="fragment_authors_developer">Разработчик</string>
+    <string name="fragment_authors_designer">Дизайнер</string>
+    <string name="fragment_authors_technical_writer">Технический писатель</string>
+    <string name="fragment_authors_system_analyst">Системный аналитик</string>
+    <string name="fragment_authors_vadim_malin">Вадим Малин</string>
+    <string name="fragment_authors_svetlana_zharkova">Светлана Жаркова</string>
+    <string name="fragment_authors_maksim_petrunin">Максим Петрунин</string>
+    <string name="fragment_authors_arina_mustafayeva">Арина Мустафаева</string>
+    <string name="fragment_authors_sofia_tretyakova">Софья Третьякова</string>
+    <string name="fragment_authors_lina_barsh">Лина Барш</string>
+    <string name="fragment_authors_business_analyst">Бизнес-аналитик</string>
+    <string name="fragment_authors_thanks">Благодарность</string>
+    <string name="fragment_authors_maria_dombrovskaya">Мария Домбровская</string>
+    <string name="fragment_authors_ivan_dobrokhvalov">Иван Доброхвалов</string>
+    <string name="fragment_authors_nikita_novichkov">Никита Новичков</string>
 </resources>
