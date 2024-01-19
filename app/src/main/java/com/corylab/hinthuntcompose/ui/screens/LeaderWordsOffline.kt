@@ -24,12 +24,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,9 +64,12 @@ import com.corylab.hinthuntcompose.data.remember.rememberMutableStateWordListOf
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithChoice
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithImage
 import com.corylab.hinthuntcompose.ui.dialog.DialogWithText
+import com.corylab.hinthuntcompose.ui.theme.LightGray
 import com.corylab.hinthuntcompose.ui.theme.MainText
+import com.corylab.hinthuntcompose.ui.theme.White
 import com.corylab.hinthuntcompose.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthuntcompose.ui.viemodel.WordViewModel
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -311,7 +320,26 @@ fun LeaderWordsOffline(
         )
     }
 
-    Scaffold(bottomBar = {
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    containerColor = LightGray,
+                    snackbarData = data,
+                    contentColor = White,
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier
+                        .padding(start = 4.dp, end = 4.dp)
+                )
+            }
+        },
+        bottomBar = {
         BottomAppBar(
             modifier = Modifier
                 .height(60.dp),
@@ -494,13 +522,13 @@ fun LeaderWordsOffline(
                                     )
                                     .combinedClickable(
                                         onClick = {
-                                            Toast
-                                                .makeText(
-                                                    localContext,
-                                                    words[index],
-                                                    Toast.LENGTH_SHORT
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    message = words[index],
+                                                    withDismissAction = true,
+                                                    duration = SnackbarDuration.Indefinite
                                                 )
-                                                .show()
+                                            }
                                         },
                                         onLongClick = {
                                             if (!showCards.value) {
