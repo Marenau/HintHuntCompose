@@ -392,12 +392,14 @@ fun PlayerWordsOffline(
                                     )
                                     .combinedClickable(
                                         onClick = {
-                                            coroutineScope.launch {
-                                                snackbarHostState.showSnackbar(
-                                                    message = words[index],
-                                                    withDismissAction = true,
-                                                    duration = SnackbarDuration.Indefinite
-                                                )
+                                            if (snackbarHostState.currentSnackbarData == null) {
+                                                coroutineScope.launch {
+                                                    snackbarHostState.showSnackbar(
+                                                        message = words[index],
+                                                        withDismissAction = true,
+                                                        duration = SnackbarDuration.Indefinite
+                                                    )
+                                                }
                                             }
                                         },
                                         onLongClick = {
