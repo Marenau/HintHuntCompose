@@ -365,6 +365,7 @@ fun PlayerWordsOffline(
             ) {
                 val count = words.size
                 var i = 0
+                var prevWord = ""
                 while (i < count - 1) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -393,7 +394,12 @@ fun PlayerWordsOffline(
                                     .combinedClickable(
                                         onClick = {
                                             if (snackbarHostState.currentSnackbarData == null) {
+                                                prevWord = ""
+                                            }
+                                            if (prevWord != words[index]) {
+                                                snackbarHostState.currentSnackbarData?.dismiss()
                                                 coroutineScope.launch {
+                                                    prevWord = words[index]
                                                     snackbarHostState.showSnackbar(
                                                         message = words[index],
                                                         withDismissAction = true,
