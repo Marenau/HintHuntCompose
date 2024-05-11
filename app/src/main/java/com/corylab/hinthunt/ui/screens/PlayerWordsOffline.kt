@@ -155,6 +155,12 @@ fun PlayerWordsOffline(
 
     val blackPress = rememberSaveable { mutableStateOf(false) }
 
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
     if (firstScore.intValue == firstNumOfCard.intValue) {
         if (openWinnerDialog.value) {
             enabled.fill(false)
@@ -217,12 +223,6 @@ fun PlayerWordsOffline(
                 navController.popBackStack()
             })
     }
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         snackbarHost = {

@@ -80,8 +80,6 @@ fun LeaderWordsOffline(
     spViewModel: SharedPreferencesViewModel,
     data: String
 ) {
-    val localContext = LocalContext.current
-
     val words = rememberMutableStateWordListOf(
         if (data.isNotEmpty()) {
             data.substring(0, data.indexOfFirst { it == ';' }).split(',')
@@ -204,6 +202,12 @@ fun LeaderWordsOffline(
 
     val blackPress = rememberSaveable { mutableStateOf(false) }
 
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
     if (openDialog.value) {
         val image = generateQrCode(
             StringBuilder().append(words.joinToString(separator = ",")).append(";")
@@ -285,6 +289,7 @@ fun LeaderWordsOffline(
             secondButtonText = stringResource(id = R.string.fragment_leader_confirm_shuffle_yes),
             firstButtonOnClick = { openShuffleDialog.value = false },
             secondButtonOnClick = {
+                snackbarHostState.currentSnackbarData?.dismiss()
                 if (showCards.value) showCards.value = false
                 firstScore.intValue = 0
                 secondScore.intValue = 0
@@ -319,12 +324,6 @@ fun LeaderWordsOffline(
             }
         )
     }
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         snackbarHost = {
