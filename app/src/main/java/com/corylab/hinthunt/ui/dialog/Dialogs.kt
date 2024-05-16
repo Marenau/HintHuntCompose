@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -42,7 +43,7 @@ fun DialogWithImage(
             Card(
                 modifier = Modifier.wrapContentSize(),
                 shape = RoundedCornerShape(6.dp),
-                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Image(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
@@ -60,7 +61,7 @@ fun DialogWithImage(
                 Icon(
                     painter = painterResource(id = R.drawable.icon_close),
                     contentDescription = "Show cards",
-                    tint = colorResource(id = R.color.dark_gray)
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -74,14 +75,14 @@ fun DialogWithText(
     title: String,
     text: String,
     buttonText: String,
-    teamColor: Color = colorResource(id = R.color.light_gray),
+    teamColor: Color = MaterialTheme.colorScheme.secondary,
     buttonOnClick: () -> Unit = { openDialog.value = false }
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -112,10 +113,10 @@ fun DialogWithText(
                     shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = teamColor,
-                        contentColor = colorResource(id = R.color.white)
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                    Text(text = buttonText, style = MainText)
+                    Text(text = buttonText,color = Color.White, style = MainText)
                 }
             }
         }
@@ -136,7 +137,7 @@ fun DialogWithChoice(
         Card(
             modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -163,8 +164,8 @@ fun DialogWithChoice(
                         .weight(1F)
                         .padding(start = 8.dp, top = 16.dp, bottom = 8.dp, end = 8.dp)
                     val colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.light_gray),
-                        contentColor = colorResource(id = R.color.white)
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     )
                     Button(
                         onClick = firstButtonOnClick,

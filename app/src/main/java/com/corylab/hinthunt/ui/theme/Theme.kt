@@ -16,27 +16,24 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = DarkGray,
-    secondary = LightGray,
-    background = BackgroundColor,
-    onSurface = White
+    primary = DarkGray,  //button color
+    secondary = LightGray, //background for cards
+    background = BackgroundColor,//background
+    onSurface = White, //text and border
+    onPrimary = BorderDark,
+    surface = DarkGray
+
+
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = DarkFair,
-    secondary = LightFair,
-    background = BackgroundColorLight,
-    onSurface = FontLightTheme
+    primary = DarkFair, //button color
+    secondary = LightFair,//background for cards
+    background = BackgroundColorLight,//background
+    onSurface = FontLightTheme, //text and border
+    onPrimary = BorderLight,
+    surface = CardsColorLight
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
 @Composable
@@ -47,11 +44,6 @@ fun HintHuntComposeTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -59,11 +51,12 @@ fun HintHuntComposeTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
-
+    val window = (view.context as Activity).window
+    window?.decorView?.rootView?.setBackgroundColor(colorScheme.background.toArgb())
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

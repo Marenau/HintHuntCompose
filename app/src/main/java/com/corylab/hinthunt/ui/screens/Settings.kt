@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import android.os.LocaleList
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +43,7 @@ import java.util.Locale
 @Composable
 fun Settings(navController: NavController, mViewModel: SharedPreferencesViewModel) {
     val language = mViewModel.getInt("language")
+    val theme = mViewModel.getInt("theme")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +62,7 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
         ) {
             Text(
@@ -75,7 +77,7 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                 stringResource(id = R.string.fragment_settings_color_scheme_light_chip),
                 stringResource(id = R.string.fragment_settings_color_scheme_dark_chip)
             )
-            val (selectedOption, onOptionSelected) = remember { mutableStateOf(schemes[0]) }
+            val (selectedOption, onOptionSelected) = remember { mutableStateOf(schemes[theme]) }
             Row(
                 Modifier
                     .selectableGroup()
@@ -85,19 +87,35 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                 schemes.forEach { text ->
                     FilterChip(
                         selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
+                        onClick = {
+                            onOptionSelected(text)
+                            SetTheme(
+                                when (text) {
+                                    schemes[0] -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                                    schemes[1] -> AppCompatDelegate.MODE_NIGHT_NO
+                                    schemes[2] -> AppCompatDelegate.MODE_NIGHT_YES
+                                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                                }
+                            )
+                            mViewModel.putInt("theme",
+                                when(text)
+                                {
+                                    schemes[0] -> 0
+                                    schemes[1] -> 1
+                                    else -> 2
+                                }
+                               )},
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -120,7 +138,7 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
         ) {
             Text(
@@ -156,13 +174,12 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -195,6 +212,9 @@ fun Settings(navController: NavController, mViewModel: SharedPreferencesViewMode
             )
         }
     }
+}
+fun SetTheme(theme: Int) {
+    AppCompatDelegate.setDefaultNightMode(theme)
 }
 
 fun localeSelection(context: Context, localeTag: String) {

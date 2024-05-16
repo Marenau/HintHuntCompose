@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -126,7 +127,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         )
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -151,13 +152,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            MaterialTheme.colorScheme.primary,
+                            selectedContainerColor =  MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -177,7 +177,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -202,13 +202,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            containerColor =  MaterialTheme.colorScheme.primary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -228,7 +227,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -253,13 +252,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            containerColor =  MaterialTheme.colorScheme.primary,
+                            selectedContainerColor =  MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -279,7 +277,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -304,13 +302,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = colorResource(
-                                id = R.color.dark_gray
-                            ),
-                            selectedContainerColor = colorResource(id = R.color.dark_gray)
+                            containerColor =  MaterialTheme.colorScheme.primary,
+                            selectedContainerColor =  MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            selectedBorderColor = colorResource(id = R.color.white),
+                            borderColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -330,7 +327,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -399,7 +396,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                         .border(
                             if (text == teamsColorsSelectedOption) BorderStroke(
                                 1.dp,
-                                Color.White
+                                MaterialTheme.colorScheme.onSurface
                             ) else BorderStroke(1.dp, Color.Transparent),
                             RoundedCornerShape(6.dp)
                         )
@@ -408,6 +405,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                     {
                         Text(
                             text = text,
+                            color = Color.White,
                             style = MainText,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
@@ -443,7 +441,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                         .border(
                             if (text == teamsColorsSelectedOption) BorderStroke(
                                 1.dp,
-                                Color.White
+                                MaterialTheme.colorScheme.onSurface
                             ) else BorderStroke(1.dp, Color.Transparent),
                             RoundedCornerShape(6.dp)
                         )
@@ -451,6 +449,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                     {
                         Text(
                             text = text,
+                            color = Color.White,
                             style = MainText,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
@@ -501,7 +500,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(6.dp),
-                colors = ButtonDefaults.buttonColors(colorResource(id = R.color.light_gray))
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
             ) {
                 Text(
                     text = stringResource(id = R.string.fragment_create_game_create),

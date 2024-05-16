@@ -22,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -241,7 +242,7 @@ fun PlayerWordsOffline(
             BottomAppBar(
                 modifier = Modifier
                     .height(60.dp),
-                containerColor = colorResource(id = R.color.light_gray)
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Row(
                     modifier = Modifier
@@ -253,21 +254,21 @@ fun PlayerWordsOffline(
                         Icon(
                             painter = painterResource(id = R.drawable.icon_info),
                             contentDescription = "Info",
-                            tint = colorResource(id = R.color.white)
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = { openHomeDialog.value = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.icon_home),
                             contentDescription = "Home",
-                            tint = colorResource(id = R.color.white)
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = { updateTurnText(turn, turnText, wordTurn, true) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.icon_confirm_turn),
                             contentDescription = "Turn",
-                            tint = colorResource(id = R.color.white)
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -277,13 +278,13 @@ fun PlayerWordsOffline(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(colorResource(id = R.color.background_color))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Card(
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(top = 24.dp, start = 16.dp, end = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.light_gray)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(6.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
@@ -307,6 +308,7 @@ fun PlayerWordsOffline(
                         Text(
                             text = StringBuilder().append("${firstScore.intValue}/${firstNumOfCard.intValue}")
                                 .toString(),
+                            color =  Color.White,
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
                             fontSize = 20.sp,
@@ -345,6 +347,7 @@ fun PlayerWordsOffline(
                         Text(
                             text = StringBuilder().append("${secondScore.intValue}/${secondNumOfCard.intValue}")
                                 .toString(),
+                            color = Color.White,
                             style = MainText,
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
                             fontSize = 20.sp,
@@ -387,7 +390,7 @@ fun PlayerWordsOffline(
                                         if (selectedColors[index] == 1) {
                                             colorMap[colorsNums[index]]!!
                                         } else {
-                                            colorResource(id = R.color.dark_gray)
+                                            MaterialTheme.colorScheme.surface
                                         }
                                     )
                                     .combinedClickable(
