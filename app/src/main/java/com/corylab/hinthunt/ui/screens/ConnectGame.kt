@@ -38,6 +38,7 @@ import com.corylab.hinthunt.data.qrcode.QRCodeAnalyzer
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.theme.Title
+import kotlin.random.Random
 
 @Composable
 fun ConnectGame(navController: NavController) {
@@ -72,21 +73,52 @@ fun ConnectGame(navController: NavController) {
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
+    val openConnectDialog = rememberSaveable { mutableStateOf(false) }
+
+    //TODO
     if (openDialog.value) {
-        DialogWithChoice(
-            title = stringResource(id = R.string.fragment_connect_game_choice_title),
-            text = stringResource(id = R.string.fragment_connect_game_choice_text),
-            firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
-            secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
-            firstButtonOnClick = {
-                navController.popBackStack()
-                navController.navigate("leader/${qrText.value}")
-            },
-            secondButtonOnClick = {
-                navController.popBackStack()
-                navController.navigate("player/${qrText.value}")
+        if (qrText.value.count { it == ';' } == 2) {
+            DialogWithChoice(
+                title = stringResource(id = R.string.fragment_connect_game_choice_title),
+                text = stringResource(id = R.string.fragment_connect_game_choice_text),
+                firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
+                secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
+                firstButtonOnClick = {
+                    navController.popBackStack()
+                    navController.navigate("leader_offline/${qrText.value}")
+                },
+                secondButtonOnClick = {
+                    navController.popBackStack()
+                    navController.navigate("player_offline/${qrText.value}")
+                }
+            )
+        } else if (qrText.value.count() == 6) {
+            if (!openConnectDialog.value) {
+                DialogWithChoice(
+                    title = stringResource(id = R.string.fragment_connect_game_online_game_title),
+                    text = stringResource(id = R.string.fragment_connect_game_online_game),
+                    firstButtonText = stringResource(id = R.string.fragment_connect_game_online_game_cancel),
+                    firstButtonOnClick = { openDialog.value = false },
+                    secondButtonText = stringResource(id = R.string.fragment_connect_game_online_game_confirm),
+                    secondButtonOnClick = { openConnectDialog.value = true }
+                )
+            } else {
+                DialogWithChoice(
+                    title = stringResource(id = R.string.fragment_connect_game_choice_title),
+                    text = stringResource(id = R.string.fragment_connect_game_choice_text),
+                    firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
+                    secondButtonText = stringResource(id = R.string.fragment_connect_game_player),
+                    firstButtonOnClick = {
+                        navController.popBackStack()
+                        navController.navigate("leader_online/${qrText.value}")
+                    },
+                    secondButtonOnClick = {
+                        navController.popBackStack()
+                        navController.navigate("player_online/${qrText.value}")
+                    }
+                )
             }
-        )
+        }
     }
 
     Column(
@@ -139,7 +171,7 @@ fun ConnectGame(navController: NavController) {
                     .padding(top = 16.dp)
             )
             if (qrText.value.isNotEmpty()) {
-                if (qrText.value.count { it == ';' } == 2) {
+                if (qrText.value.count { it == ';' } == 2 || qrText.value.count() == 6) {
                     unsupportedText.value = ""
                     ButtonWithText(
                         modifier = Modifier

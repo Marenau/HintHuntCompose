@@ -53,7 +53,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.corylab.hinthunt.R
 import com.corylab.hinthunt.data.remember.rememberMutableStateBoolListOf
-import com.corylab.hinthunt.data.remember.rememberMutableStateIntListOf
 import com.corylab.hinthunt.data.remember.rememberMutableStateNumsListOf
 import com.corylab.hinthunt.data.remember.rememberMutableStateWordListOf
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
@@ -140,7 +139,7 @@ fun PlayerWordsOffline(
         )
     }
 
-    val selectedColors = rememberMutableStateIntListOf(size)
+    val selectedColors = rememberMutableStateBoolListOf(size, false)
     val colorMap = mapOf(
         0 to neutralColor,
         1 to firstTeamColor,
@@ -148,7 +147,7 @@ fun PlayerWordsOffline(
         3 to colorResource(id = R.color.black)
     )
 
-    val enabled = rememberMutableStateBoolListOf(size)
+    val enabled = rememberMutableStateBoolListOf(size, true)
 
     val openHomeDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -202,7 +201,7 @@ fun PlayerWordsOffline(
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_player_defeat),
+                title = stringResource(id = R.string.fragment_player_victory),
                 text = winner,
                 buttonText = stringResource(id = R.string.fragment_player_confirm_winner),
                 teamColor = winnerColor
@@ -219,9 +218,11 @@ fun PlayerWordsOffline(
             secondButtonText = stringResource(id = R.string.fragment_leader_confirm_return_home_yes),
             firstButtonOnClick = { openHomeDialog.value = false },
             secondButtonOnClick = {
-                navController.popBackStack()
-                navController.navigate("home")
-                navController.popBackStack()
+                navController.navigate("home") {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
             })
     }
 
@@ -248,15 +249,8 @@ fun PlayerWordsOffline(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 0.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_info),
-                            contentDescription = "Info",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
                     IconButton(onClick = { openHomeDialog.value = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.icon_home),
@@ -387,7 +381,7 @@ fun PlayerWordsOffline(
                                     .padding(end = 8.dp)
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(
-                                        if (selectedColors[index] == 1) {
+                                        if (selectedColors[index]) {
                                             colorMap[colorsNums[index]]!!
                                         } else {
                                             MaterialTheme.colorScheme.surface
@@ -413,7 +407,7 @@ fun PlayerWordsOffline(
                                         onLongClick = {
                                             if (enabled[index]) {
                                                 enabled[index] = false
-                                                selectedColors[index] = 1
+                                                selectedColors[index] = true
                                                 if (colorsNums[index] == 0) {
                                                     updateTurnText(
                                                         turn,
@@ -454,7 +448,7 @@ fun PlayerWordsOffline(
                                     softWrap = false,
                                     style = MainText,
                                     fontSize = 15.sp,
-                                    color = if (selectedColors[index] == 1 && colorMap[colorsNums[index]]!! == neutralColor) {
+                                    color = if (selectedColors[index] && colorMap[colorsNums[index]]!! == neutralColor) {
                                         colorResource(id = R.color.dark_gray)
                                     } else colorResource(id = R.color.white)
                                 )

@@ -49,8 +49,7 @@
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
-    <string name="fragment_leader_victory">Victory!</string>
-    <string name="fragment_leader_defeat">Defeat!</string>
+    <string name="fragment_leader_victory">The end of the game!</string>
     <string name="fragment_leader_winner_first">The first team is the winner!</string>
     <string name="fragment_leader_winner_second">The second team is the winner!</string>
     <string name="fragment_leader_confirm_winner">Confirm</string>
@@ -62,8 +61,7 @@
     <string name="fragment_connect_game_leader">Leader</string>
     <string name="fragment_connect_game_player">Player</string>
     <string name="fragment_connect_game_choice_title">Connect</string>
-    <string name="fragment_player_victory">Victory!</string>
-    <string name="fragment_player_defeat">Defeat!</string>
+    <string name="fragment_player_victory">The end of the game!</string>
     <string name="fragment_player_winner_first">The first team is the winner!</string>
     <string name="fragment_player_winner_second">The second team is the winner!</string>
     <string name="fragment_player_confirm_winner">Confirm</string>
@@ -97,4 +95,13 @@
     <string name="fragment_authors_maria_dombrovskaya">Maria Dombrovskaya</string>
     <string name="fragment_authors_ivan_dobrokhvalov">Ivan Dobrokhvalov</string>
     <string name="fragment_authors_nikita_novichkov">Nikita Novichkov</string>
+    <string name="fragment_create_game_online_game_title">Attention!</string>
+    <string name="fragment_create_game_online_game">An internet connection is required to play online.</string>
+    <string name="fragment_create_game_online_game_confirm">Confirm</string>
+    <string name="fragment_create_game_online_game_cancel">Cancel</string>
+    <string name="fragment_connect_game_online_game_title">Attention!</string>
+    <string name="fragment_connect_game_online_game">An internet connection is required to play online.</string>
+    <string name="fragment_connect_game_online_game_confirm">Confirm</string>
+    <string name="fragment_connect_game_online_game_cancel">Cancel</string>
+    <string name="fragment_settings_language_system">System</string>
 </resources>

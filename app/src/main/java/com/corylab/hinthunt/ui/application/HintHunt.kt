@@ -2,14 +2,16 @@ package com.corylab.hinthunt.ui.application
 
 import android.app.Application
 import android.content.Context
-import com.corylab.hinthunt.data.repository.Repository
+import com.corylab.hinthunt.data.repository.OfflineRepository
+import com.corylab.hinthunt.data.repository.OnlineRepository
 import java.util.Locale
 
 class HintHunt : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        repository = Repository(applicationContext)
+        offlineRepository = OfflineRepository(applicationContext)
+        onlineRepository = OnlineRepository()
 
         val sharedPreferences = getSharedPreferences(
             "appPrefs",
@@ -18,6 +20,9 @@ class HintHunt : Application() {
         if (!sharedPreferences.contains("_first_launch")) {
             sharedPreferences.edit()
                 .putInt("language", if (Locale.getDefault().language == "en") 0 else 1)
+                .putInt("words_language", if (Locale.getDefault().language == "en") 0 else 1)
+                .putInt("words_size", 30)
+                .putInt("words_complexity", 0)
                 .putInt("size", 18).putInt("complexity", 0).putInt("teams_color", 0)
                 .putInt("game_mode", 0).putInt("game_type", 0).apply()
             sharedPreferences.edit().putBoolean("_first_launch", false).apply()
@@ -27,6 +32,7 @@ class HintHunt : Application() {
     companion object {
         lateinit var context: Context
             private set
-        lateinit var repository: Repository
+        lateinit var offlineRepository: OfflineRepository
+        lateinit var onlineRepository: OnlineRepository
     }
 }

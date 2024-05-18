@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: SharedPreferencesViewModel by viewModels {
         SharedPreferencesViewModel.SharedPreferencesModelFactory(
             this.applicationContext,
-            HintHunt.repository
+            HintHunt.offlineRepository
         )
     }
 

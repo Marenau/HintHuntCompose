@@ -13,6 +13,7 @@
     <string name="fragment_settings_color_scheme_light_chip">Light</string>
     <string name="fragment_settings_color_scheme_dark_chip">Dark</string>
     <string name="fragment_settings_language">Language</string>
+    <string name="fragment_settings_language_system">System</string>
     <string name="fragment_settings_language_russian">Russian</string>
     <string name="fragment_settings_language_english">English</string>
     <string name="fragment_settings_support_developers">Support developers</string>
@@ -38,9 +39,12 @@
     <string name="fragment_create_game_noble_saffron">Noble Saffron</string>
     <string name="fragment_create_game_lilac_at_midnight">Lilac at midnight</string>
     <string name="fragment_create_game_cranberries_in_moss">Cranberries in moss</string>
+    <string name="fragment_create_game_online_game_title">Attention!</string>
+    <string name="fragment_create_game_online_game">An internet connection is required to play online.</string>
+    <string name="fragment_create_game_online_game_confirm">Confirm</string>
+    <string name="fragment_create_game_online_game_cancel">Cancel</string>
     <string name="fragment_create_game_create">Create</string>
-    <string name="fragment_player_victory">Victory!</string>
-    <string name="fragment_player_defeat">Defeat!</string>
+    <string name="fragment_player_victory">The end of the game!</string>
     <string name="fragment_player_winner_first">The first team is the winner!</string>
     <string name="fragment_player_winner_second">The second team is the winner!</string>
     <string name="fragment_player_confirm_winner">Confirm</string>
@@ -54,8 +58,7 @@
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
-    <string name="fragment_leader_victory">Victory!</string>
-    <string name="fragment_leader_defeat">Defeat!</string>
+    <string name="fragment_leader_victory">The end of the game!</string>
     <string name="fragment_leader_winner_first">The first team is the winner!</string>
     <string name="fragment_leader_winner_second">The second team is the winner!</string>
     <string name="fragment_leader_confirm_winner">Confirm</string>
@@ -74,6 +77,10 @@
     <string name="fragment_connect_game_leader">Leader</string>
     <string name="fragment_connect_game_player">Player</string>
     <string name="fragment_connect_unsupported_qr">Unsupported QR code.</string>
+    <string name="fragment_connect_game_online_game_title">Attention!</string>
+    <string name="fragment_connect_game_online_game">An internet connection is required to play online.</string>
+    <string name="fragment_connect_game_online_game_confirm">Confirm</string>
+    <string name="fragment_connect_game_online_game_cancel">Cancel</string>
     <string name="fragment_authors_title">Authors</string>
     <string name="fragment_authors_project_manager">Project manager</string>
     <string name="fragment_authors_main_developer">Main developer</string>

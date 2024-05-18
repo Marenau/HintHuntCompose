@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "542672934590",
+    "firebase_url": "https://hinthunt-8dc14-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hinthunt-8dc14",
+    "storage_bucket": "hinthunt-8dc14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542672934590:android:269fe5214bd66f82d8f0ef",
+        "android_client_info": {
+          "package_name": "com.corylab.hinthunt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD23bG6_UtwJO_75XYnmc6PrjuhqxNJ3kQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542672934590:android:948a28aef14a7dc5d8f0ef",
+        "android_client_info": {
+          "package_name": "com.corylab.hinthuntcompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD23bG6_UtwJO_75XYnmc6PrjuhqxNJ3kQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

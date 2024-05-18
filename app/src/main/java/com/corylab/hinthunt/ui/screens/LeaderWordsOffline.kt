@@ -1,7 +1,6 @@
 package com.corylab.hinthunt.ui.screens
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -45,7 +44,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,15 +57,12 @@ import androidx.navigation.NavController
 import com.corylab.hinthunt.R
 import com.corylab.hinthunt.data.qrcode.generateQrCode
 import com.corylab.hinthunt.data.remember.rememberMutableStateBoolListOf
-import com.corylab.hinthunt.data.remember.rememberMutableStateIntListOf
 import com.corylab.hinthunt.data.remember.rememberMutableStateNumsListOf
 import com.corylab.hinthunt.data.remember.rememberMutableStateWordListOf
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
 import com.corylab.hinthunt.ui.dialog.DialogWithImage
 import com.corylab.hinthunt.ui.dialog.DialogWithText
-import com.corylab.hinthunt.ui.theme.LightGray
 import com.corylab.hinthunt.ui.theme.MainText
-import com.corylab.hinthunt.ui.theme.White
 import com.corylab.hinthunt.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthunt.ui.viemodel.WordViewModel
 import kotlinx.coroutines.launch
@@ -179,7 +174,7 @@ fun LeaderWordsOffline(
         )
     }
 
-    val selectedColors = rememberMutableStateIntListOf(size)
+    val selectedColors = rememberMutableStateBoolListOf(size, false)
     val colorMap = mapOf(
         0 to neutralColor,
         1 to firstTeamColor,
@@ -191,7 +186,7 @@ fun LeaderWordsOffline(
         mutableStateOf(false)
     }
 
-    val enabled = rememberMutableStateBoolListOf(size)
+    val enabled = rememberMutableStateBoolListOf(size, true)
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -258,7 +253,7 @@ fun LeaderWordsOffline(
             enabled.fill(false)
             DialogWithText(
                 openDialog = openWinnerDialog,
-                title = stringResource(id = R.string.fragment_leader_defeat),
+                title = stringResource(id = R.string.fragment_leader_victory),
                 text = winner,
                 buttonText = stringResource(id = R.string.fragment_leader_confirm_winner),
                 teamColor = winnerColor
@@ -275,9 +270,11 @@ fun LeaderWordsOffline(
             secondButtonText = stringResource(id = R.string.fragment_leader_confirm_return_home_yes),
             firstButtonOnClick = { openHomeDialog.value = false },
             secondButtonOnClick = {
-                navController.popBackStack()
-                navController.navigate("home")
-                navController.popBackStack()
+                navController.navigate("home") {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
             })
     }
 
@@ -295,7 +292,7 @@ fun LeaderWordsOffline(
                 firstScore.intValue = 0
                 secondScore.intValue = 0
                 blackPress.value = false
-                selectedColors.fill(0)
+                selectedColors.fill(false)
                 words.clear()
                 words.addAll(wViewModel.getWords())
                 enabled.fill(true)
@@ -340,64 +337,63 @@ fun LeaderWordsOffline(
             }
         },
         bottomBar = {
-        BottomAppBar(
-            modifier = Modifier
-                .height(60.dp),
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Row(
+            BottomAppBar(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 0.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .height(60.dp),
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                IconButton(onClick = {
-                    showCards.value = !showCards.value
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_show_cards),
-                        contentDescription = "Show cards",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                IconButton(onClick = {
-                    updateTurnText(turn, turnText, wordTurn, true)
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_turn),
-                        contentDescription = "Turn",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                IconButton(onClick = { openHomeDialog.value = true }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_home),
-                        contentDescription = "Home",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                if (data.isEmpty()) {
-                    IconButton(onClick = { openShuffleDialog.value = true }) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = {
+                        showCards.value = !showCards.value
+                    }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.icon_mix_cards),
-                            contentDescription = "Mix cards",
+                            painter = painterResource(id = R.drawable.icon_show_cards),
+                            contentDescription = "Show cards",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    IconButton(onClick = {
+                        updateTurnText(turn, turnText, wordTurn, true)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_turn),
+                            contentDescription = "Turn",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    IconButton(onClick = { openHomeDialog.value = true }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_home),
+                            contentDescription = "Home",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    if (data.isEmpty()) {
+                        IconButton(onClick = { openShuffleDialog.value = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.icon_mix_cards),
+                                contentDescription = "Mix cards",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                    IconButton(onClick = {
+                        openDialog.value = true
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_show_qr_code),
+                            contentDescription = "Show QR code",
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
-
-                IconButton(onClick = {
-                    openDialog.value = true
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_show_qr_code),
-                        contentDescription = "Show QR code",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
             }
-        }
-    }) { innerPadding ->
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -408,7 +404,7 @@ fun LeaderWordsOffline(
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(top = 24.dp, start = 16.dp, end = 16.dp),
-                colors = CardDefaults.cardColors(containerColor =  MaterialTheme.colorScheme.primary),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(6.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
@@ -512,11 +508,11 @@ fun LeaderWordsOffline(
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(
                                         if (showCards.value) {
-                                            if (selectedColors[index] == 1)
+                                            if (selectedColors[index])
                                                 darkerColor(colorMap[colorsNums[index]]!!)
                                             else colorMap[colorsNums[index]]!!
                                         } else {
-                                            if (selectedColors[index] == 1) {
+                                            if (selectedColors[index]) {
                                                 colorMap[colorsNums[index]]!!
                                             } else {
                                                 MaterialTheme.colorScheme.surface
@@ -544,7 +540,7 @@ fun LeaderWordsOffline(
                                             if (!showCards.value) {
                                                 if (enabled[index]) {
                                                     enabled[index] = false
-                                                    selectedColors[index] = 1
+                                                    selectedColors[index] = true
                                                     if (colorsNums[index] == 0) {
                                                         updateTurnText(
                                                             turn,
@@ -588,7 +584,7 @@ fun LeaderWordsOffline(
                                     fontSize = 15.sp,
                                     color =
                                     if (showCards.value) {
-                                        if (selectedColors[index] == 1)
+                                        if (selectedColors[index])
                                             darkerColor(
                                                 if (colorMap[colorsNums[index]]!! == neutralColor)
                                                     colorResource(id = R.color.dark_gray)
@@ -600,10 +596,9 @@ fun LeaderWordsOffline(
                                             else colorResource(id = R.color.white)
                                         }
                                     } else {
-                                        if (selectedColors[index] == 1 && colorMap[colorsNums[index]]!! == neutralColor) {
+                                        if (selectedColors[index] && colorMap[colorsNums[index]]!! == neutralColor) {
                                             colorResource(id = R.color.dark_gray)
-                                        }
-                                        else colorResource(id = R.color.white)
+                                        } else colorResource(id = R.color.white)
                                     }
                                 )
                             }

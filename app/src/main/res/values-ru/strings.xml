@@ -50,8 +50,7 @@
     <string name="fragment_leader_menu_home">Home</string>
     <string name="fragment_leader_menu_mix_cards">Mix cards</string>
     <string name="fragment_leader_menu_show_qr_code">Show QR code</string>
-    <string name="fragment_leader_victory">Победа!</string>
-    <string name="fragment_leader_defeat">Поражение!</string>
+    <string name="fragment_leader_victory">Конец игры!</string>
     <string name="fragment_leader_winner_first">Первая команда победила!</string>
     <string name="fragment_leader_winner_second">Вторая команда победила!</string>
     <string name="fragment_leader_confirm_winner">OK</string>
@@ -62,8 +61,7 @@
     <string name="fragment_connect_game_leader">Лидер</string>
     <string name="fragment_connect_game_player">Игрок</string>
     <string name="fragment_connect_game_choice_title">Присоединиться</string>
-    <string name="fragment_player_victory">Победа!</string>
-    <string name="fragment_player_defeat">Поражение!</string>
+    <string name="fragment_player_victory">Конец игры!</string>
     <string name="fragment_player_winner_first">Первая команда победила!</string>
     <string name="fragment_player_winner_second">Вторая команда победила!</string>
     <string name="fragment_player_confirm_winner">OK</string>
@@ -97,4 +95,13 @@
     <string name="fragment_authors_maria_dombrovskaya">Мария Домбровская</string>
     <string name="fragment_authors_ivan_dobrokhvalov">Иван Доброхвалов</string>
     <string name="fragment_authors_nikita_novichkov">Никита Новичков</string>
+    <string name="fragment_create_game_online_game_title">Внимание!</string>
+    <string name="fragment_create_game_online_game">Для онлайн-игры необходимо подключение к Интернету.</string>
+    <string name="fragment_create_game_online_game_confirm">Продолжить</string>
+    <string name="fragment_create_game_online_game_cancel">Назад</string>
+    <string name="fragment_connect_game_online_game_title">Внимание!</string>
+    <string name="fragment_connect_game_online_game">Для онлайн-игры необходимо подключение к Интернету.</string>
+    <string name="fragment_connect_game_online_game_confirm">Продолжить</string>
+    <string name="fragment_connect_game_online_game_cancel">Назад</string>
+    <string name="fragment_settings_language_system">Системная</string>
 </resources>

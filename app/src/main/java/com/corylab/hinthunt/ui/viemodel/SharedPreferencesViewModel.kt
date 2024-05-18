@@ -3,24 +3,24 @@ package com.corylab.hinthunt.ui.viemodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.corylab.hinthunt.data.repository.Repository
+import com.corylab.hinthunt.data.repository.OfflineRepository
 
-class SharedPreferencesViewModel(private val repository: Repository) : ViewModel() {
+class SharedPreferencesViewModel(private val offlineRepository: OfflineRepository) : ViewModel() {
 
-    fun getInt(key: String) = repository.getInt(key)
+    fun getInt(key: String) = offlineRepository.getInt(key)
 
-    fun putInt(key: String, number: Int) = repository.putInt(key, number)
+    fun putInt(key: String, number: Int) = offlineRepository.putInt(key, number)
 
-    fun getString(key: String) = repository.getString(key)
+    fun getString(key: String) = offlineRepository.getString(key)
 
-    fun putString(key: String, text: String) = repository.putString(key, text)
+    fun putString(key: String, text: String) = offlineRepository.putString(key, text)
 
     class SharedPreferencesModelFactory(
         private val context: Context,
-        private val repository: Repository
+        private val offlineRepository: OfflineRepository
     ) :
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            SharedPreferencesViewModel(repository) as T
+            SharedPreferencesViewModel(offlineRepository) as T
     }
 }

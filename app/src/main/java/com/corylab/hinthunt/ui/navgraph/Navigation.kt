@@ -8,43 +8,46 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.corylab.hinthunt.ui.screens.CreateGame
-import com.corylab.hinthunt.ui.screens.Home
-import com.corylab.hinthunt.ui.screens.Settings
 import com.corylab.hinthunt.ui.application.HintHunt
 import com.corylab.hinthunt.ui.screens.Authors
 import com.corylab.hinthunt.ui.screens.ConnectGame
+import com.corylab.hinthunt.ui.screens.CreateGame
+import com.corylab.hinthunt.ui.screens.Home
+import com.corylab.hinthunt.ui.screens.LeaderWordsOffline
+import com.corylab.hinthunt.ui.screens.LeaderWordsOnline
+import com.corylab.hinthunt.ui.screens.PlayerWordsOffline
+import com.corylab.hinthunt.ui.screens.PlayerWordsOnline
+import com.corylab.hinthunt.ui.screens.Settings
+import com.corylab.hinthunt.ui.viemodel.FirebaseViewModel
 import com.corylab.hinthunt.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthunt.ui.viemodel.WordViewModel
-import com.corylab.hinthunt.ui.screens.LeaderWordsOffline
-import com.corylab.hinthunt.ui.screens.PlayerWordsOffline
 
 @Composable
 fun Navigation(applicationContext: Context) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home")
     {
-        composable(route = "leader")
+        composable(route = "leader_offline")
         {
             LeaderWordsOffline(
                 navController = navController,
                 wViewModel = viewModel(
                     factory = WordViewModel.WordViewModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
                     )
                 ),
                 spViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
                     )
                 ),
                 data = ""
             )
         }
         composable(
-            route = "leader/{data}",
+            route = "leader_offline/{data}",
             arguments = listOf(navArgument("data") { type = NavType.StringType })
         )
         {
@@ -54,20 +57,20 @@ fun Navigation(applicationContext: Context) {
                 wViewModel = viewModel(
                     factory = WordViewModel.WordViewModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
                     )
                 ),
                 spViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
                     )
                 ),
                 data = data
             )
         }
         composable(
-            route = "player/{data}",
+            route = "player_offline/{data}",
             arguments = listOf(navArgument("data") { type = NavType.StringType })
         )
         {
@@ -77,13 +80,71 @@ fun Navigation(applicationContext: Context) {
                 data = data
             )
         }
+        composable(
+            route = "leader_online/{data}",
+            arguments = listOf(navArgument("data") { type = NavType.StringType })
+        )
+        {
+            val data = it.arguments?.getString("data")!!
+            LeaderWordsOnline(
+                navController = navController,
+                fbViewModel = viewModel(
+                    factory = FirebaseViewModel.FirebaseViewModelFactory(
+                        applicationContext,
+                        HintHunt.onlineRepository
+                    )
+                ),
+                wViewModel = viewModel(
+                    factory = WordViewModel.WordViewModelFactory(
+                        applicationContext,
+                        HintHunt.offlineRepository
+                    )
+                ),
+                spViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
+                        applicationContext,
+                        HintHunt.offlineRepository
+                    )
+                ),
+                data = data
+            )
+        }
+        composable(
+            route = "player_online/{data}",
+            arguments = listOf(navArgument("data") { type = NavType.StringType })
+        )
+        {
+            val data = it.arguments?.getString("data")!!
+            PlayerWordsOnline(
+                navController = navController,
+                fbViewModel = viewModel(
+                    factory = FirebaseViewModel.FirebaseViewModelFactory(
+                        applicationContext,
+                        HintHunt.onlineRepository
+                    )
+                ),
+                data = data
+            )
+        }
         composable("create_game") {
             CreateGame(
                 navController = navController,
-                mViewModel = viewModel(
+                spViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
+                    )
+                ),
+                fbViewModel = viewModel(
+                    factory = FirebaseViewModel.FirebaseViewModelFactory(
+                        applicationContext,
+                        HintHunt.onlineRepository
+                    )
+                ),
+                wViewModel = viewModel(
+                    factory = WordViewModel.WordViewModelFactory(
+                        applicationContext,
+                        HintHunt.offlineRepository
                     )
                 )
             )
@@ -94,7 +155,7 @@ fun Navigation(applicationContext: Context) {
                 mViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
-                        HintHunt.repository
+                        HintHunt.offlineRepository
                     )
                 )
             )

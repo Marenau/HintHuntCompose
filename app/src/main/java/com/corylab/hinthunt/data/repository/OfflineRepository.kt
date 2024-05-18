@@ -4,7 +4,7 @@ import android.content.Context
 import com.corylab.hinthunt.data.datasource.SharedPreferencesSource
 import com.corylab.hinthunt.data.datasource.WordCardSource
 
-class Repository(application: Context) {
+class OfflineRepository(application: Context) {
     private val sharedPreferencesSource = SharedPreferencesSource(application)
     private val wordCardSource = WordCardSource()
 
@@ -22,17 +22,40 @@ class Repository(application: Context) {
 
     private fun getLanguage() = getInt("language")
 
+    private fun getComplexity() = getInt("complexity")
+
+    private fun getRoomSize() = getInt("words_size")
+
+    private fun getRoomLanguage() = getInt("words_language")
+
+    private fun getRoomComplexity() = getInt("words_complexity")
+
     private fun getEasyWords() = wordCardSource.getEasyWords(getSize(), getLanguage())
 
     private fun getMediumWords() = wordCardSource.getMediumWords(getSize(), getLanguage())
 
     private fun getHardWords() = wordCardSource.getHardWords(getSize(), getLanguage())
 
+    private fun getNewEasyWords() = wordCardSource.getEasyWords(getRoomSize(), getRoomLanguage())
+
+    private fun getNewMediumWords() = wordCardSource.getMediumWords(getRoomSize(), getRoomLanguage())
+
+    private fun getNewHardWords() = wordCardSource.getHardWords(getRoomSize(), getRoomLanguage())
+
     fun getWords(): List<String> {
-        val words: List<String> = when (sharedPreferencesSource.getInt("complexity")) {
+        val words: List<String> = when (getComplexity()) {
             0 -> getEasyWords()
             1 -> getMediumWords()
             else -> getHardWords()
+        }
+        return words
+    }
+
+    fun getNewWords(): List<String> {
+        val words: List<String> = when (getRoomComplexity()) {
+            0 -> getNewEasyWords()
+            1 -> getNewMediumWords()
+            else -> getNewHardWords()
         }
         return words
     }

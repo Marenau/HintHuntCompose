@@ -21,7 +21,7 @@ val AppNameStyle: TextStyle
     @Composable
     get() {
         return TextStyle(
-            fontFamily = FontFamily.Default,
+            fontFamily = RobotoFontFamily,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -30,7 +30,7 @@ val Title: TextStyle
     @Composable
     get() {
         return TextStyle(
-            fontFamily = FontFamily.Default,
+            fontFamily = RobotoFontFamily,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -40,7 +40,7 @@ val MainText: TextStyle
     @Composable
     get() {
         return TextStyle(
-            fontFamily = FontFamily.Default,
+            fontFamily = RobotoFontFamily,
             fontWeight = FontWeight.Normal,
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 20.sp

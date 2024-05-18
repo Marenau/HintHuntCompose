@@ -1,5 +1,6 @@
 package com.corylab.hinthunt.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,19 +38,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.corylab.hinthunt.R
+import com.corylab.hinthunt.ui.dialog.DialogWithChoice
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.theme.Title
+import com.corylab.hinthunt.ui.viemodel.FirebaseViewModel
 import com.corylab.hinthunt.ui.viemodel.SharedPreferencesViewModel
+import com.corylab.hinthunt.ui.viemodel.WordViewModel
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewModel) {
+fun CreateGame(
+    navController: NavController,
+    spViewModel: SharedPreferencesViewModel,
+    fbViewModel: FirebaseViewModel,
+    wViewModel: WordViewModel,
+) {
 
-    val mode = mViewModel.getInt("game_mode")
-    val type = mViewModel.getInt("game_type")
-    val size = mViewModel.getInt("size")
-    val complexity = mViewModel.getInt("complexity")
-    val teamsColor = mViewModel.getInt("teams_color")
+    val mode = spViewModel.getInt("game_mode")
+    val type = spViewModel.getInt("game_type")
+    val size = spViewModel.getInt("size")
+    val complexity = spViewModel.getInt("complexity")
+    val teamsColor = spViewModel.getInt("teams_color")
 
     val cardModifier = Modifier
         .fillMaxWidth()
@@ -59,7 +69,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_game_mode_offline),
         stringResource(id = R.string.fragment_create_game_game_mode_online)
     )
-    val (modeSelectedOption, modeOnOptionSelected) = remember {
+    val (modeSelectedOption, modeOnOptionSelected) = rememberSaveable {
         mutableStateOf(gameMods[mode])
     }
 
@@ -67,7 +77,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_game_type_words),
         stringResource(id = R.string.fragment_create_game_game_type_illustrations)
     )
-    val (typeSelectedOption, typeOnOptionSelected) = remember {
+    val (typeSelectedOption, typeOnOptionSelected) = rememberSaveable {
         mutableStateOf(gameTypes[type])
     }
 
@@ -76,7 +86,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_board_size_24),
         stringResource(id = R.string.fragment_create_game_board_size_30)
     )
-    val (sizeSelectedOption, sizeOnOptionSelected) = remember {
+    val (sizeSelectedOption, sizeOnOptionSelected) = rememberSaveable {
         mutableStateOf(
             sizes[when (size) {
                 18 -> 0
@@ -91,7 +101,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_words_complexity_medium),
         stringResource(id = R.string.fragment_create_game_words_complexity_hard)
     )
-    val (complexitySelectedOption, complexityOnOptionSelected) = remember {
+    val (complexitySelectedOption, complexityOnOptionSelected) = rememberSaveable {
         mutableStateOf(
             complexities[complexity]
         )
@@ -105,8 +115,53 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         stringResource(id = R.string.fragment_create_game_lilac_at_midnight),
         stringResource(id = R.string.fragment_create_game_cranberries_in_moss)
     )
-    val (teamsColorsSelectedOption, teamsColorsOnOptionSelected) = remember {
+    val (teamsColorsSelectedOption, teamsColorsOnOptionSelected) = rememberSaveable {
         mutableStateOf(teamsColors[teamsColor])
+    }
+
+    val openDialog = rememberSaveable { mutableStateOf(false) }
+
+    if (openDialog.value) {
+        DialogWithChoice(
+            title = stringResource(id = R.string.fragment_create_game_online_game_title),
+            text = stringResource(id = R.string.fragment_create_game_online_game),
+            firstButtonText = stringResource(id = R.string.fragment_create_game_online_game_cancel),
+            firstButtonOnClick = { openDialog.value = false },
+            secondButtonText = stringResource(id = R.string.fragment_create_game_online_game_confirm),
+            secondButtonOnClick = {
+                openDialog.value = false
+                val uniqueKey = createOnlineGame(spViewModel)
+                spViewModel.putString("last_game_id", uniqueKey)
+                val words = wViewModel.getWords()
+                var firstNumOfCard = when (words.size) {
+                    18 -> 5
+                    24 -> 7
+                    else -> 9
+                }
+                var secondNumOfCard = when (words.size) {
+                    18 -> 5
+                    24 -> 7
+                    else -> 9
+                }
+                if (Random.nextInt(2) == 1) firstNumOfCard++ else secondNumOfCard++
+                val colorsNums =
+                    wViewModel.createColorsNums(words.size, firstNumOfCard, secondNumOfCard)
+                val numOfColors = spViewModel.getInt("teams_color")
+                val gameLang = spViewModel.getInt("language")
+                val gameComplexity = spViewModel.getInt("complexity")
+                fbViewModel.createGame(
+                    key = uniqueKey,
+                    words = words,
+                    firstNumOfCard = firstNumOfCard,
+                    secondNumOfCard = secondNumOfCard,
+                    colorsNums = colorsNums,
+                    numOfColors = numOfColors,
+                    complexity = gameComplexity,
+                    lang = gameLang
+                )
+                navController.navigate("leader_online/${uniqueKey}")
+            }
+        )
     }
 
     Column(
@@ -114,7 +169,6 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Text(
             text = stringResource(id = R.string.fragment_create_game_title),
             style = Title,
@@ -129,7 +183,6 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
             modifier = cardModifier,
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
-
         ) {
             Text(
                 text = stringResource(id = R.string.fragment_create_game_game_mode),
@@ -146,18 +199,21 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                 for (i in gameMods.indices) {
                     FilterChip(
                         selected = (gameMods[i] == modeSelectedOption),
-                        onClick = { modeOnOptionSelected(gameMods[i]) },
+                        onClick = {
+                            modeOnOptionSelected(gameMods[i])
+                            typeOnOptionSelected(gameTypes[0])
+                        },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
                             MaterialTheme.colorScheme.primary,
-                            selectedContainerColor =  MaterialTheme.colorScheme.primary
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
+                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -177,7 +233,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -196,18 +252,22 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                 for (i in gameTypes.indices) {
                     FilterChip(
                         selected = (gameTypes[i] == typeSelectedOption),
-                        onClick = { typeOnOptionSelected(gameTypes[i]) },
+                        //TODO
+                        onClick = {
+//                            typeOnOptionSelected(gameTypes[i])
+//                            modeOnOptionSelected(gameMods[1])
+                        },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor =  MaterialTheme.colorScheme.primary,
+                            containerColor = MaterialTheme.colorScheme.primary,
                             selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
+                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -227,7 +287,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -252,12 +312,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor =  MaterialTheme.colorScheme.primary,
-                            selectedContainerColor =  MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
+                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -277,7 +337,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -302,12 +362,12 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
                             .weight(1F)
                             .padding(end = 8.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor =  MaterialTheme.colorScheme.primary,
-                            selectedContainerColor =  MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor =  MaterialTheme.colorScheme.onSurface,
+                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
                             selectedBorderWidth = 1.dp
                         ),
                         label = {
@@ -327,7 +387,7 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         }
         Card(
             modifier = cardModifier,
-            colors = CardDefaults.cardColors( MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
 
         ) {
@@ -472,29 +532,41 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
         ) {
             Button(
                 onClick = {
-                    mViewModel.putInt("game_mode", when(modeSelectedOption) {
-                        gameMods[0] -> 0
-                        else -> 1
-                    })
-                    mViewModel.putInt("game_type", when(typeSelectedOption) {
-                        gameTypes[0] -> 0
-                        else -> 1
-                    })
-                    mViewModel.putInt("size", sizeSelectedOption.toInt())
-                    mViewModel.putInt("complexity", when(complexitySelectedOption) {
-                        complexities[0] -> 0
-                        complexities[1] -> 1
-                        else -> 2
-                    })
-                    mViewModel.putInt("teams_color", when (teamsColorsSelectedOption) {
-                        teamsColors[0] -> 0
-                        teamsColors[1] -> 1
-                        teamsColors[2] -> 2
-                        teamsColors[3] -> 3
-                        teamsColors[4] -> 4
-                        else -> 5
-                    })
-                    navController.navigate("leader")
+                    spViewModel.putInt(
+                        "game_mode", when (modeSelectedOption) {
+                            gameMods[0] -> 0
+                            else -> 1
+                        }
+                    )
+                    spViewModel.putInt(
+                        "game_type", when (typeSelectedOption) {
+                            gameTypes[0] -> 0
+                            else -> 1
+                        }
+                    )
+                    spViewModel.putInt("size", sizeSelectedOption.toInt())
+                    spViewModel.putInt(
+                        "complexity", when (complexitySelectedOption) {
+                            complexities[0] -> 0
+                            complexities[1] -> 1
+                            else -> 2
+                        }
+                    )
+                    spViewModel.putInt(
+                        "teams_color", when (teamsColorsSelectedOption) {
+                            teamsColors[0] -> 0
+                            teamsColors[1] -> 1
+                            teamsColors[2] -> 2
+                            teamsColors[3] -> 3
+                            teamsColors[4] -> 4
+                            else -> 5
+                        }
+                    )
+                    if (gameMods[1] == modeSelectedOption) {
+                        openDialog.value = true
+                    } else {
+                        navController.navigate("leader_offline")
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -511,3 +583,15 @@ fun CreateGame(navController: NavController, mViewModel: SharedPreferencesViewMo
     }
 }
 
+fun createOnlineGame(viewModel: SharedPreferencesViewModel): String {
+    val uniqueKey = generateUniqueKey()
+    viewModel.putString("online_game", uniqueKey)
+    return uniqueKey
+}
+
+fun generateUniqueKey(length: Int = 6): String {
+    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+    return (1..length)
+        .map { _ -> charPool[Random.nextInt(charPool.size)] }
+        .joinToString("")
+}

@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -116,7 +120,14 @@ fun DialogWithText(
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                    Text(text = buttonText,color = Color.White, style = MainText)
+                    Text(
+                        text = buttonText,
+                        color = Color.White,
+                        style = MainText,
+                        fontSize = 20.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = false
+                    )
                 }
             }
         }
@@ -173,7 +184,13 @@ fun DialogWithChoice(
                         shape = RoundedCornerShape(6.dp),
                         colors = colors
                     ) {
-                        Text(text = firstButtonText, style = MainText)
+                        Text(
+                            text = firstButtonText,
+                            style = MainText,
+                            fontSize = 20.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false
+                        )
                     }
                     Button(
                         onClick = secondButtonOnClick,
@@ -181,9 +198,58 @@ fun DialogWithChoice(
                         shape = RoundedCornerShape(6.dp),
                         colors = colors
                     ) {
-                        Text(text = secondButtonText, style = MainText)
+                        Text(
+                            text = secondButtonText,
+                            style = MainText,
+                            fontSize = 20.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false
+                        )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogWithProgress(
+    title: String,
+    text: String
+) {
+    Dialog(onDismissRequest = {}) {
+        Card(
+            modifier = Modifier.wrapContentSize(),
+            shape = RoundedCornerShape(6.dp),
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = title,
+                    style = MainText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = text,
+                    style = MainText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 24.dp),
+                    color = colorResource(id = R.color.white)
+                )
             }
         }
     }
