@@ -2,9 +2,12 @@ package com.corylab.hinthunt.ui.screens
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -36,6 +39,7 @@ fun Authors(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
         Text(
             text = stringResource(id = R.string.fragment_authors_title),
@@ -47,9 +51,10 @@ fun Authors(navController: NavController) {
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(scrollState)
+                .wrapContentSize()
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val projectManager =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_project_manager))
@@ -64,7 +69,6 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val mainDeveloper =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_main_developer))
                     .append("\n").append(stringResource(id = R.string.fragment_authors_vadim_malin))
@@ -78,14 +82,11 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val developer =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_developer))
                     .append("\n").append(stringResource(id = R.string.fragment_authors_vadim_malin))
                     .append("\n")
                     .append(stringResource(id = R.string.fragment_authors_svetlana_zharkova))
-                    .append("\n")
-                    .append(stringResource(id = R.string.fragment_authors_maksim_petrunin))
                     .toString()
             Text(
                 text = developer,
@@ -96,7 +97,6 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val designer =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_designer))
                     .append("\n")
@@ -111,15 +111,12 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val technicalWriter =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_technical_writer))
-                    .append("\n").append(stringResource(id = R.string.fragment_authors_vadim_malin))
                     .append("\n")
-                    .append(stringResource(id = R.string.fragment_authors_svetlana_zharkova))
+                    .append(stringResource(id = R.string.fragment_authors_lina_barsh))
                     .append("\n")
-                    .append(stringResource(id = R.string.fragment_authors_sofia_tretyakova))
-                    .append("\n").append(stringResource(id = R.string.fragment_authors_lina_barsh))
+                    .append(stringResource(id = R.string.fragment_authors_arina_mustafayeva))
                     .toString()
             Text(
                 text = technicalWriter,
@@ -130,12 +127,10 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val systemAnalyst =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_system_analyst))
-                    .append("\n").append(stringResource(id = R.string.fragment_authors_vadim_malin))
                     .append("\n")
-                    .append(stringResource(id = R.string.fragment_authors_svetlana_zharkova))
+                    .append(stringResource(id = R.string.fragment_authors_sofia_tretyakova))
                     .toString()
             Text(
                 text = systemAnalyst,
@@ -146,7 +141,6 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val businessAnalyst =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_business_analyst))
                     .append("\n").append(stringResource(id = R.string.fragment_authors_lina_barsh))
@@ -160,13 +154,14 @@ fun Authors(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
             )
-
             val thanks =
                 StringBuilder().append(stringResource(id = R.string.fragment_authors_thanks))
                     .append("\n")
                     .append(stringResource(id = R.string.fragment_authors_maria_dombrovskaya))
                     .append("\n")
                     .append(stringResource(id = R.string.fragment_authors_ivan_dobrokhvalov))
+                    .append("\n")
+                    .append(stringResource(id = R.string.fragment_authors_maksim_petrunin))
                     .append("\n")
                     .append(stringResource(id = R.string.fragment_authors_nikita_novichkov))
                     .toString()
@@ -178,6 +173,15 @@ fun Authors(navController: NavController) {
                     .padding(top = 16.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp
+            )
+        }
+        Box(
+            modifier = Modifier.padding(top = 24.dp)
+        ) {
+            ButtonWithText(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(id = R.string.fragment_authors_support_developers),
+                onClick = {}
             )
         }
     }

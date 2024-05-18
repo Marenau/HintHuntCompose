@@ -23,6 +23,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -329,6 +330,20 @@ fun LeaderWordsOnline(
                             painter = painterResource(id = R.drawable.icon_show_cards),
                             contentDescription = "Show cards",
                             tint = colorResource(id = R.color.white)
+                        )
+                    }
+                    IconButton(onClick = {
+                        fbViewModel.putTurn(
+                            when (turn.value) {
+                                1 -> 2
+                                else -> 1
+                            }
+                        )
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_turn),
+                            contentDescription = "Turn",
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = { openHomeDialog.value = true }) {

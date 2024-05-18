@@ -1,6 +1,14 @@
 package com.corylab.hinthunt.ui.screens
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -12,8 +20,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
@@ -30,6 +40,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,8 +50,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
@@ -51,6 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
@@ -65,6 +79,7 @@ import com.corylab.hinthunt.ui.dialog.DialogWithText
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.viemodel.SharedPreferencesViewModel
 import com.corylab.hinthunt.ui.viemodel.WordViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -278,6 +293,12 @@ fun LeaderWordsOffline(
             })
     }
 
+    val isAnimationPlaying = remember { mutableStateOf(false) }
+
+    ExpandingCircleAnimation(
+        onAnimationEnd = { isAnimationPlaying.value = false }
+    )
+
     if (openShuffleDialog.value) {
         DialogWithChoice(
             onDismiss = { openShuffleDialog.value = false },
@@ -287,6 +308,8 @@ fun LeaderWordsOffline(
             secondButtonText = stringResource(id = R.string.fragment_leader_confirm_shuffle_yes),
             firstButtonOnClick = { openShuffleDialog.value = false },
             secondButtonOnClick = {
+                isAnimationPlaying.value = true
+
                 snackbarHostState.currentSnackbarData?.dismiss()
                 if (showCards.value) showCards.value = false
                 firstScore.intValue = 0
@@ -626,5 +649,49 @@ fun updateTurnText(
     } else {
         turnText.value = StringBuilder().append("←").append(text).toString()
         if (change) turn.intValue = 1
+    }
+}
+
+@Composable
+fun ExpandingCircleAnimation(
+    modifier: Modifier = Modifier,
+    circleColor: Color = Color.Blue,
+    animationDuration: Int = 2000,
+    onAnimationEnd: () -> Unit = {}
+) {
+    val circleSize = remember { Animatable(0f) }
+    val circleAlpha = remember { Animatable(1f) }
+
+    LaunchedEffect(Unit) {
+        circleSize.animateTo(
+            targetValue = 2f,
+            animationSpec = tween(
+                durationMillis = animationDuration,
+                delayMillis = 0,
+                easing = LinearEasing
+            )
+        )
+        delay(animationDuration.toLong())
+        circleAlpha.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(
+                durationMillis = animationDuration,
+                delayMillis = 0,
+                easing = LinearEasing
+            )
+        )
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(circleSize.value * LocalConfiguration.current.screenWidthDp.dp)
+                .alpha(circleAlpha.value)
+                .clip(CircleShape)
+                .background(circleColor)
+        )
     }
 }

@@ -151,7 +151,6 @@ fun Navigation(applicationContext: Context) {
         }
         composable("settings") {
             Settings(
-                navController = navController,
                 mViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,

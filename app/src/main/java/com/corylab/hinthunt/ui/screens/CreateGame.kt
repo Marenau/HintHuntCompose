@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -54,6 +56,7 @@ fun CreateGame(
     fbViewModel: FirebaseViewModel,
     wViewModel: WordViewModel,
 ) {
+    val scrollState = rememberScrollState()
 
     val mode = spViewModel.getInt("game_mode")
     val type = spViewModel.getInt("game_type")
@@ -79,6 +82,18 @@ fun CreateGame(
     )
     val (typeSelectedOption, typeOnOptionSelected) = rememberSaveable {
         mutableStateOf(gameTypes[type])
+    }
+
+    val openComplexity = rememberSaveable { mutableStateOf(true) }
+
+    val openOffline = rememberSaveable { mutableStateOf(true) }
+
+    if (typeSelectedOption == gameTypes[1]) {
+        openComplexity.value = false
+        openOffline.value = false
+    } else {
+        openComplexity.value = true
+        openOffline.value = true
     }
 
     val sizes = listOf(
@@ -123,6 +138,7 @@ fun CreateGame(
 
     if (openDialog.value) {
         DialogWithChoice(
+            onDismiss = { openDialog.value = false },
             title = stringResource(id = R.string.fragment_create_game_online_game_title),
             text = stringResource(id = R.string.fragment_create_game_online_game),
             firstButtonText = stringResource(id = R.string.fragment_create_game_online_game_cancel),
@@ -168,6 +184,7 @@ fun CreateGame(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
         Text(
             text = stringResource(id = R.string.fragment_create_game_title),
@@ -197,37 +214,38 @@ fun CreateGame(
                     .padding(start = 8.dp)
             ) {
                 for (i in gameMods.indices) {
-                    FilterChip(
-                        selected = (gameMods[i] == modeSelectedOption),
-                        onClick = {
-                            modeOnOptionSelected(gameMods[i])
-                            typeOnOptionSelected(gameTypes[0])
-                        },
-                        shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier
-                            .weight(1F)
-                            .padding(end = 8.dp),
-                        colors = FilterChipDefaults.filterChipColors(
-                            MaterialTheme.colorScheme.primary,
-                            selectedContainerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
-                            selectedBorderWidth = 1.dp
-                        ),
-                        label = {
-                            Text(
-                                text = gameMods[i],
-                                style = MainText,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 8.dp),
-                                textAlign = TextAlign.Center,
-                                fontSize = 15.sp
-                            )
-                        }
-                    )
+                    if (openOffline.value || i == 1) {
+                        FilterChip(
+                            selected = (gameMods[i] == modeSelectedOption),
+                            onClick = {
+                                modeOnOptionSelected(gameMods[i])
+                            },
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier
+                                .weight(1F)
+                                .padding(end = 8.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                MaterialTheme.colorScheme.primary,
+                                selectedContainerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = FilterChipDefaults.filterChipBorder(
+                                borderColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedBorderColor = MaterialTheme.colorScheme.onSurface,
+                                selectedBorderWidth = 1.dp
+                            ),
+                            label = {
+                                Text(
+                                    text = gameMods[i],
+                                    style = MainText,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 15.sp
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -252,10 +270,8 @@ fun CreateGame(
                 for (i in gameTypes.indices) {
                     FilterChip(
                         selected = (gameTypes[i] == typeSelectedOption),
-                        //TODO
                         onClick = {
-//                            typeOnOptionSelected(gameTypes[i])
-//                            modeOnOptionSelected(gameMods[1])
+                            typeOnOptionSelected(gameTypes[i])
                         },
                         shape = RoundedCornerShape(6.dp),
                         modifier = Modifier
@@ -335,53 +351,55 @@ fun CreateGame(
                 }
             }
         }
-        Card(
-            modifier = cardModifier,
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
-            shape = RoundedCornerShape(6.dp)
+        if (openComplexity.value) {
+            Card(
+                modifier = cardModifier,
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
+                shape = RoundedCornerShape(6.dp)
 
-        ) {
-            Text(
-                text = stringResource(id = R.string.fragment_create_game_complexity_of_words),
-                style = MainText,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
-            )
-            Row(
-                Modifier
-                    .selectableGroup()
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)
             ) {
-                complexities.forEach { text ->
-                    FilterChip(
-                        selected = (text == complexitySelectedOption),
-                        onClick = { complexityOnOptionSelected(text) },
-                        shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier
-                            .weight(1F)
-                            .padding(end = 8.dp),
-                        colors = FilterChipDefaults.filterChipColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            selectedContainerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            borderColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
-                            selectedBorderWidth = 1.dp
-                        ),
-                        label = {
-                            Text(
-                                text = text,
-                                style = MainText,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 8.dp),
-                                textAlign = TextAlign.Center,
-                                fontSize = 15.sp
-                            )
-                        }
-                    )
+                Text(
+                    text = stringResource(id = R.string.fragment_create_game_complexity_of_words),
+                    style = MainText,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                )
+                Row(
+                    Modifier
+                        .selectableGroup()
+                        .fillMaxWidth()
+                        .padding(start = 8.dp)
+                ) {
+                    complexities.forEach { text ->
+                        FilterChip(
+                            selected = (text == complexitySelectedOption),
+                            onClick = { complexityOnOptionSelected(text) },
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier
+                                .weight(1F)
+                                .padding(end = 8.dp),
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                selectedContainerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = FilterChipDefaults.filterChipBorder(
+                                borderColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedBorderColor = MaterialTheme.colorScheme.onSurface,
+                                selectedBorderWidth = 1.dp
+                            ),
+                            label = {
+                                Text(
+                                    text = text,
+                                    style = MainText,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 15.sp
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -389,7 +407,6 @@ fun CreateGame(
             modifier = cardModifier,
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
             shape = RoundedCornerShape(6.dp)
-
         ) {
             Text(
                 text = stringResource(id = R.string.fragment_create_game_colors_of_teams),
@@ -529,6 +546,7 @@ fun CreateGame(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = 24.dp)
         ) {
             Button(
                 onClick = {

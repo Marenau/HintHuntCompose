@@ -16,7 +16,7 @@
     <string name="fragment_settings_language">Language</string>
     <string name="fragment_settings_language_russian">Russian</string>
     <string name="fragment_settings_language_english">English</string>
-    <string name="fragment_settings_support_developers">Support developers</string>
+    <string name="fragment_authors_support_developers">Support developers</string>
 
     <string name="fragment_create_game_title">Create game</string>
     <string name="fragment_create_game_game_mode">Game mode</string>
@@ -78,20 +78,20 @@
     <string name="fragment_player_confirm_return_home_no">No</string>
     <string name="fragment_connect_unsupported_qr">Unsupported QR code.</string>
     <string name="fragment_authors_title">Authors</string>
-    <string name="fragment_authors_project_manager">Project manager</string>
-    <string name="fragment_authors_main_developer">Main developer</string>
-    <string name="fragment_authors_developer">Developer</string>
-    <string name="fragment_authors_designer">Designer</string>
-    <string name="fragment_authors_technical_writer">Technical writer</string>
-    <string name="fragment_authors_system_analyst">System analyst</string>
+    <string name="fragment_authors_project_manager">Project manager:</string>
+    <string name="fragment_authors_main_developer">Main developer:</string>
+    <string name="fragment_authors_developer">Developer:</string>
+    <string name="fragment_authors_designer">Designer:</string>
+    <string name="fragment_authors_technical_writer">Technical writer:</string>
+    <string name="fragment_authors_system_analyst">System analyst:</string>
     <string name="fragment_authors_vadim_malin">Vadim Malin</string>
     <string name="fragment_authors_svetlana_zharkova">Svetlana Zharkova</string>
     <string name="fragment_authors_maksim_petrunin">Maksim Petrunin</string>
     <string name="fragment_authors_arina_mustafayeva">Arina Mustafayeva</string>
     <string name="fragment_authors_sofia_tretyakova">Sofia Tretyakova</string>
     <string name="fragment_authors_lina_barsh">Lina Barsh</string>
-    <string name="fragment_authors_business_analyst">Business analyst</string>
-    <string name="fragment_authors_thanks">Thanks</string>
+    <string name="fragment_authors_business_analyst">Business analyst:</string>
+    <string name="fragment_authors_thanks">Thanks:</string>
     <string name="fragment_authors_maria_dombrovskaya">Maria Dombrovskaya</string>
     <string name="fragment_authors_ivan_dobrokhvalov">Ivan Dobrokhvalov</string>
     <string name="fragment_authors_nikita_novichkov">Nikita Novichkov</string>

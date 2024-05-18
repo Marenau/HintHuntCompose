@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,12 +31,14 @@ import com.corylab.hinthunt.ui.theme.MainText
 
 @Composable
 fun Home(navController: NavController) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
@@ -43,7 +47,6 @@ fun Home(navController: NavController) {
                 .wrapContentSize()
                 .padding(top = 8.dp)
         )
-
         Text(
             text = stringResource(id = R.string.fragment_home_app_name),
             fontSize = 48.sp,
@@ -51,12 +54,10 @@ fun Home(navController: NavController) {
             style = AppNameStyle,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-
         val modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .width(250.dp)
             .padding(top = 16.dp)
-
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_create_game),
@@ -70,26 +71,18 @@ fun Home(navController: NavController) {
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_rules),
-            onClick = {  }
+            onClick = {}
         )
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_settings),
             onClick = { navController.navigate("settings") }
         )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            ButtonWithText(
-                modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.BottomCenter),
-                text = stringResource(id = R.string.fragment_home_authors),
-                onClick = { navController.navigate("authors") }
-            )
-        }
+        ButtonWithText(
+            modifier = modifier,
+            text = stringResource(id = R.string.fragment_home_authors),
+            onClick = { navController.navigate("authors") }
+        )
     }
 }
 

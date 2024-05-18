@@ -130,22 +130,22 @@ class FirebaseSource {
     }
 
     fun getScore(command: Int): Flow<Int> = callbackFlow {
-        val numRef = when (command) {
+        val scoreRef = when (command) {
             1 -> database.child("rooms").child(room).child("first_score")
             else -> database.child("rooms").child(room).child("second_score")
         }
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val num = snapshot.getValue<Int>()!!
-                trySend(num)
+                val score = snapshot.getValue<Int>()!!
+                trySend(score)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 close(error.toException())
             }
         }
-        numRef.addValueEventListener(listener)
-        awaitClose { numRef.removeEventListener(listener) }
+        scoreRef.addValueEventListener(listener)
+        awaitClose { scoreRef.removeEventListener(listener) }
     }
 
     fun getTurn(): Flow<Int> = callbackFlow {
@@ -184,12 +184,12 @@ class FirebaseSource {
     }
 
     fun getTeamsColors(): Flow<Int> = callbackFlow {
-        val turnRef = database.child("rooms").child(room).child("teams_colors")
+        val teamsColorsRef = database.child("rooms").child(room).child("teams_colors")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val turn = snapshot.getValue<Int>()!!
-                trySend(turn)
+                val teamsColors = snapshot.getValue<Int>()!!
+                trySend(teamsColors)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -197,17 +197,17 @@ class FirebaseSource {
             }
         }
 
-        turnRef.addValueEventListener(listener)
-        awaitClose { turnRef.removeEventListener(listener) }
+        teamsColorsRef.addValueEventListener(listener)
+        awaitClose { teamsColorsRef.removeEventListener(listener) }
     }
 
     fun getWinner(): Flow<Int> = callbackFlow {
-        val turnRef = database.child("rooms").child(room).child("winner")
+        val winnerRef = database.child("rooms").child(room).child("winner")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val turn = snapshot.getValue<Int>()!!
-                trySend(turn)
+                val winner = snapshot.getValue<Int>()!!
+                trySend(winner)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -215,8 +215,8 @@ class FirebaseSource {
             }
         }
 
-        turnRef.addValueEventListener(listener)
-        awaitClose { turnRef.removeEventListener(listener) }
+        winnerRef.addValueEventListener(listener)
+        awaitClose { winnerRef.removeEventListener(listener) }
     }
 
     fun getSelectedColors(): Flow<List<Boolean>> = callbackFlow {
@@ -237,7 +237,7 @@ class FirebaseSource {
     }
 
     fun getComplexity(): Flow<Int> = callbackFlow {
-        val turnRef = database.child("rooms").child(room).child("words_complexity")
+        val complexityRef = database.child("rooms").child(room).child("words_complexity")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -250,12 +250,12 @@ class FirebaseSource {
             }
         }
 
-        turnRef.addValueEventListener(listener)
-        awaitClose { turnRef.removeEventListener(listener) }
+        complexityRef.addValueEventListener(listener)
+        awaitClose { complexityRef.removeEventListener(listener) }
     }
 
     fun getLang(): Flow<Int> = callbackFlow {
-        val turnRef = database.child("rooms").child(room).child("words_language")
+        val langRef = database.child("rooms").child(room).child("words_language")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -268,12 +268,12 @@ class FirebaseSource {
             }
         }
 
-        turnRef.addValueEventListener(listener)
-        awaitClose { turnRef.removeEventListener(listener) }
+        langRef.addValueEventListener(listener)
+        awaitClose { langRef.removeEventListener(listener) }
     }
 
     fun getSize(): Flow<Int> = callbackFlow {
-        val turnRef = database.child("rooms").child(room).child("words_size")
+        val sizeRef = database.child("rooms").child(room).child("words_size")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -286,7 +286,7 @@ class FirebaseSource {
             }
         }
 
-        turnRef.addValueEventListener(listener)
-        awaitClose { turnRef.removeEventListener(listener) }
+        sizeRef.addValueEventListener(listener)
+        awaitClose { sizeRef.removeEventListener(listener) }
     }
 }

@@ -16,7 +16,7 @@
     <string name="fragment_settings_language">Язык</string>
     <string name="fragment_settings_language_russian">Русский</string>
     <string name="fragment_settings_language_english">Английский</string>
-    <string name="fragment_settings_support_developers">Поддержать разработчиков</string>
+    <string name="fragment_authors_support_developers">Поддержать разработчиков</string>
 
     <string name="fragment_create_game_title">Создание игры</string>
     <string name="fragment_create_game_game_mode">Режим игры</string>
@@ -79,19 +79,19 @@
     <string name="fragment_connect_unsupported_qr">Неподдерживаемый QR-код.</string>
     <string name="fragment_authors_title">Авторы</string>
     <string name="fragment_authors_project_manager">Менеджер проекта</string>
-    <string name="fragment_authors_main_developer">Главный разработчик</string>
-    <string name="fragment_authors_developer">Разработчик</string>
-    <string name="fragment_authors_designer">Дизайнер</string>
-    <string name="fragment_authors_technical_writer">Технический писатель</string>
-    <string name="fragment_authors_system_analyst">Системный аналитик</string>
+    <string name="fragment_authors_main_developer">Главный разработчик:</string>
+    <string name="fragment_authors_developer">Разработчик:</string>
+    <string name="fragment_authors_designer">Дизайнер:</string>
+    <string name="fragment_authors_technical_writer">Технический писатель:</string>
+    <string name="fragment_authors_system_analyst">Системный аналитик:</string>
     <string name="fragment_authors_vadim_malin">Вадим Малин</string>
     <string name="fragment_authors_svetlana_zharkova">Светлана Жаркова</string>
     <string name="fragment_authors_maksim_petrunin">Максим Петрунин</string>
     <string name="fragment_authors_arina_mustafayeva">Арина Мустафаева</string>
     <string name="fragment_authors_sofia_tretyakova">Софья Третьякова</string>
     <string name="fragment_authors_lina_barsh">Лина Барш</string>
-    <string name="fragment_authors_business_analyst">Бизнес-аналитик</string>
-    <string name="fragment_authors_thanks">Благодарность</string>
+    <string name="fragment_authors_business_analyst">Бизнес-аналитик:</string>
+    <string name="fragment_authors_thanks">Благодарность:</string>
     <string name="fragment_authors_maria_dombrovskaya">Мария Домбровская</string>
     <string name="fragment_authors_ivan_dobrokhvalov">Иван Доброхвалов</string>
     <string name="fragment_authors_nikita_novichkov">Никита Новичков</string>

@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -75,10 +78,10 @@ fun ConnectGame(navController: NavController) {
 
     val openConnectDialog = rememberSaveable { mutableStateOf(false) }
 
-    //TODO
     if (openDialog.value) {
         if (qrText.value.count { it == ';' } == 2) {
             DialogWithChoice(
+                onDismiss = { openDialog.value = false },
                 title = stringResource(id = R.string.fragment_connect_game_choice_title),
                 text = stringResource(id = R.string.fragment_connect_game_choice_text),
                 firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
@@ -95,6 +98,7 @@ fun ConnectGame(navController: NavController) {
         } else if (qrText.value.count() == 6) {
             if (!openConnectDialog.value) {
                 DialogWithChoice(
+                    onDismiss = { openDialog.value = false },
                     title = stringResource(id = R.string.fragment_connect_game_online_game_title),
                     text = stringResource(id = R.string.fragment_connect_game_online_game),
                     firstButtonText = stringResource(id = R.string.fragment_connect_game_online_game_cancel),
@@ -104,6 +108,7 @@ fun ConnectGame(navController: NavController) {
                 )
             } else {
                 DialogWithChoice(
+                    onDismiss = { openDialog.value = false },
                     title = stringResource(id = R.string.fragment_connect_game_choice_title),
                     text = stringResource(id = R.string.fragment_connect_game_choice_text),
                     firstButtonText = stringResource(id = R.string.fragment_connect_game_leader),
@@ -129,10 +134,12 @@ fun ConnectGame(navController: NavController) {
         Text(
             text = stringResource(id = R.string.fragment_connect_game_title),
             style = Title,
+            fontSize = 40.sp,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp),
-            fontSize = 40.sp
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         )
         if (hasCamPermission.value) {
             AndroidView(modifier = Modifier

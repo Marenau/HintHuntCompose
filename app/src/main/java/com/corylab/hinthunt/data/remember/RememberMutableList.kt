@@ -47,26 +47,6 @@ fun rememberMutableStateBoolListOf(size: Int, type: Boolean): SnapshotStateList<
 }
 
 @Composable
-fun rememberMutableStateBoolListOf(list: List<Boolean>): SnapshotStateList<Boolean> {
-    return rememberSaveable(
-        saver = listSaver(
-            save = { stateList ->
-                if (stateList.isNotEmpty()) {
-                    val first = stateList.first()
-                    if (!canBeSaved(first)) {
-                        throw IllegalStateException("${first::class} cannot be saved. By default only types which can be stored in the Bundle class can be saved.")
-                    }
-                }
-                stateList.toList()
-            },
-            restore = { it.toMutableStateList() }
-        )
-    ) {
-        list.toMutableStateList()
-    }
-}
-
-@Composable
 fun rememberMutableStateWordListOf(list: List<String>): SnapshotStateList<String> {
     return rememberSaveable(
         saver = listSaver(
