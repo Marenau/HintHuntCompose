@@ -1,7 +1,6 @@
 package com.corylab.hinthunt.ui.screens
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -32,7 +31,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -83,17 +81,14 @@ fun LeaderWordsOnline(
 
     val words = fbViewModel.words.collectAsState()
 
-    //TODO
     val complexity = fbViewModel.complexity.collectAsState()
 
     spViewModel.putInt("words_complexity", complexity.value)
 
-    //TODO
     val lang = fbViewModel.lang.collectAsState()
 
     spViewModel.putInt("words_language", lang.value)
 
-    //TODO
     val wordsSize = fbViewModel.size.collectAsState()
 
     spViewModel.putInt("words_size", wordsSize.value)
@@ -281,7 +276,11 @@ fun LeaderWordsOnline(
                 }
                 if (Random.nextInt(2) == 1) newFirstNumOfCard++ else newSecondNumOfCard++
                 val newColorsNums =
-                    wViewModel.createColorsNums(newWords.size, newFirstNumOfCard, newSecondNumOfCard)
+                    wViewModel.createColorsNums(
+                        newWords.size,
+                        newFirstNumOfCard,
+                        newSecondNumOfCard
+                    )
                 fbViewModel.putWords(newWords)
                 val size = newWords.size
                 fbViewModel.putSelectedColor(List(size) { false })
@@ -313,8 +312,7 @@ fun LeaderWordsOnline(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier
-                    .height(60.dp),
+                modifier = Modifier.height(60.dp),
                 containerColor = colorResource(id = R.color.light_gray)
             ) {
                 Row(

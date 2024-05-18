@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +39,6 @@ import com.corylab.hinthunt.data.qrcode.QRCodeAnalyzer
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.theme.Title
-import kotlin.random.Random
 
 @Composable
 fun ConnectGame(navController: NavController) {

@@ -68,8 +68,6 @@ fun PlayerWordsOffline(
     navController: NavController,
     data: String
 ) {
-    val localContext = LocalContext.current
-
     val words = rememberMutableStateWordListOf(
         data.substring(0, data.indexOfFirst { it == ';' }).split(',')
     )
