@@ -78,7 +78,6 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                 )
 
                 val schemes = listOf(
-                    stringResource(id = R.string.fragment_settings_color_scheme_system_chip),
                     stringResource(id = R.string.fragment_settings_color_scheme_light_chip),
                     stringResource(id = R.string.fragment_settings_color_scheme_dark_chip)
                 )
@@ -96,10 +95,9 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                                 onOptionSelected(text)
                                 setTheme(
                                     when (text) {
-                                        schemes[0] -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                                        schemes[1] -> AppCompatDelegate.MODE_NIGHT_NO
-                                        schemes[2] -> AppCompatDelegate.MODE_NIGHT_YES
-                                        else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                                        schemes[0] -> AppCompatDelegate.MODE_NIGHT_NO
+                                        schemes[1] -> AppCompatDelegate.MODE_NIGHT_YES
+                                        else -> AppCompatDelegate.MODE_NIGHT_YES
                                     }
                                 )
                                 mViewModel.putInt(
@@ -107,7 +105,7 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                                     when (text) {
                                         schemes[0] -> 0
                                         schemes[1] -> 1
-                                        else -> 2
+                                        else -> 1
                                     }
                                 )
                             },
