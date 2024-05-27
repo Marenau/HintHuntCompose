@@ -1,60 +1,57 @@
 package com.corylab.hinthunt.data.repository
 
-import android.content.Context
-import com.corylab.hinthunt.data.datasource.FirebaseSource
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.ValueEventListener
+import com.corylab.hinthunt.data.datasource.FirebaseWordSource
 
 class OnlineRepository {
-    private val firebaseSource = FirebaseSource()
+    private val firebaseWordSource = FirebaseWordSource()
 
-    fun initiateKey(key: String) = firebaseSource.initiateKey(key)
+    fun initiateKey(key: String) = firebaseWordSource.initiateKey(key)
 
-    fun putKey(key: String) = firebaseSource.putKey(key)
+    fun putKey(key: String) = firebaseWordSource.putKey(key)
 
-    fun putWords(words: List<String>) = firebaseSource.putWords(words)
+    fun putWords(words: List<String>) = firebaseWordSource.putWords(words)
 
-    fun putNumOfCards(command: Int, num: Int) = firebaseSource.putNumOfCards(command, num)
+    fun putNumOfCards(command: Int, num: Int) = firebaseWordSource.putNumOfCards(command, num)
 
-    fun putScore(command: Int, score: Int) = firebaseSource.putScore(command, score)
+    fun putScore(command: Int, score: Int) = firebaseWordSource.putScore(command, score)
 
-    fun putTurn(turn: Int) = firebaseSource.putTurn(turn)
+    fun putTurn(turn: Int) = firebaseWordSource.putTurn(turn)
 
-    fun putColorNums(colors: List<Int>) = firebaseSource.putColorNums(colors)
+    fun putColorNums(colors: List<Int>) = firebaseWordSource.putColorNums(colors)
 
-    fun putTeamsColors(numOfColors: Int) = firebaseSource.putTeamsColors(numOfColors)
+    fun putTeamsColors(numOfColors: Int) = firebaseWordSource.putTeamsColors(numOfColors)
 
-    fun putSelectedColor(selectedColors: List<Boolean>) = firebaseSource.putSelectedColor(selectedColors)
+    fun putSelectedColor(selectedColors: List<Boolean>) = firebaseWordSource.putSelectedColor(selectedColors)
 
-    fun putWinner(winner: Int) = firebaseSource.putWinner(winner)
+    fun putWinner(winner: Int) = firebaseWordSource.putWinner(winner)
 
-    fun putComplexity(complexity: Int) = firebaseSource.putComplexity(complexity)
+    fun putComplexity(complexity: Int) = firebaseWordSource.putComplexity(complexity)
 
-    fun putLang(lang: Int) = firebaseSource.putLang(lang)
+    fun putLang(lang: Int) = firebaseWordSource.putLang(lang)
 
-    fun putSize(size: Int) = firebaseSource.putSize(size)
+    fun putSize(size: Int) = firebaseWordSource.putSize(size)
 
-    fun putSelectedColor(index: Int, state: Boolean) = firebaseSource.putSelectedColor(index, state)
+    fun putSelectedColor(index: Int, state: Boolean) = firebaseWordSource.putSelectedColor(index, state)
 
-    fun getWords() = firebaseSource.getWords()
+    fun getWords() = firebaseWordSource.getWords()
 
-    fun getNumOfCards(command: Int) = firebaseSource.getNumOfCards(command)
+    fun getNumOfCards(command: Int) = firebaseWordSource.getNumOfCards(command)
 
-    fun getScore(command: Int) = firebaseSource.getScore(command)
+    fun getScore(command: Int) = firebaseWordSource.getScore(command)
 
-    fun getTurn() = firebaseSource.getTurn()
+    fun getTurn() = firebaseWordSource.getTurn()
 
-    fun getColorNums() = firebaseSource.getColorNums()
+    fun getColorNums() = firebaseWordSource.getColorNums()
 
-    fun getTeamsColors() = firebaseSource.getTeamsColors()
+    fun getTeamsColors() = firebaseWordSource.getTeamsColors()
 
-    fun getWinner() = firebaseSource.getWinner()
+    fun getWinner() = firebaseWordSource.getWinner()
 
-    fun getSelectedColors() = firebaseSource.getSelectedColors()
+    fun getSelectedColors() = firebaseWordSource.getSelectedColors()
 
-    fun getComplexity() = firebaseSource.getComplexity()
+    fun getComplexity() = firebaseWordSource.getComplexity()
 
-    fun getLang() = firebaseSource.getLang()
+    fun getLang() = firebaseWordSource.getLang()
 
-    fun getSize() = firebaseSource.getSize()
+    fun getSize() = firebaseWordSource.getSize()
 }

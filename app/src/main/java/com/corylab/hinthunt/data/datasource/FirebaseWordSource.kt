@@ -11,7 +11,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class FirebaseSource {
+class FirebaseWordSource {
     private var database: DatabaseReference = Firebase.database.reference
 
     private var uniqueKey: String = ""
