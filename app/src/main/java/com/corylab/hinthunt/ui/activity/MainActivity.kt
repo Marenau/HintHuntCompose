@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
                 Navigation(applicationContext)
             }
         }
-
     }
 }
 

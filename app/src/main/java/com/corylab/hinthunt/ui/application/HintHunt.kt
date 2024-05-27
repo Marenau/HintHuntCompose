@@ -23,7 +23,9 @@ class HintHunt : Application() {
                 .putInt("words_language", if (Locale.getDefault().language == "en") 0 else 1)
                 .putInt("words_size", 30)
                 .putInt("words_complexity", 0)
-                .putInt("size", 18).putInt("complexity", 0).putInt("teams_color", 0)
+                .putInt("size", 18)
+                .putInt("complexity", 0)
+                .putInt("teams_color", 0)
                 .putInt("theme", 1)
                 .putInt("game_mode", 0).putInt("game_type", 0).apply()
 

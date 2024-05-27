@@ -14,11 +14,11 @@ class SharedPreferencesSource(context: Context) {
         editor = sharedPreferences.edit()
     }
 
-    fun putString(key: String, value: String) = editor.putString(key, value).commit()
+    fun putString(key: String, value: String) = editor.putString(key, value).apply()
 
     fun getString(key: String, defaultValue: String = "empty") = sharedPreferences.getString(key, defaultValue)
 
-    fun putInt(key: String, value: Int) = editor.putInt(key, value).commit()
+    fun putInt(key: String, value: Int) = editor.putInt(key, value).apply()
 
     fun getInt(key: String, defaultValue: Int = 0) = sharedPreferences.getInt(key, defaultValue)
 }

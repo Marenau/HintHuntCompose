@@ -104,7 +104,6 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                                     "theme",
                                     when (text) {
                                         schemes[0] -> 0
-                                        schemes[1] -> 1
                                         else -> 1
                                     }
                                 )
