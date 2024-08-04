@@ -1,17 +1,10 @@
 package com.corylab.hinthunt.ui.viemodel;
 
 import android.content.Context
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.corylab.hinthunt.R
-import com.corylab.hinthunt.data.remember.rememberMutableStateNumsListOf
-import com.corylab.hinthunt.data.repository.OnlineRepository
-import com.google.firebase.database.ValueEventListener
+import com.corylab.hinthunt.data.repository.OnlineWordsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,11 +13,9 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
-class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewModel() {
+class FirebaseViewModel(private val onlineWordsRepository: OnlineWordsRepository) : ViewModel() {
 
     private val _words = MutableStateFlow<List<String>>(emptyList())
     val words: StateFlow<List<String>> = _words.asStateFlow()
@@ -60,39 +51,39 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
     private val _teamsColors = MutableStateFlow(0)
     val teamsColors: StateFlow<Int> = _teamsColors.asStateFlow()
 
-    fun initiateKey(key: String) = onlineRepository.initiateKey(key)
+    fun initiateKey(key: String) = onlineWordsRepository.initiateKey(key)
 
-    fun putKey(key: String) = onlineRepository.putKey(key)
+    fun putWords(words: List<String>) = onlineWordsRepository.putWords(words)
 
-    fun putWords(words: List<String>) = onlineRepository.putWords(words)
+    fun putNumOfCards(command: Int, num: Int) = onlineWordsRepository.putNumOfCards(command, num)
 
-    fun putNumOfCards(command: Int, num: Int) = onlineRepository.putNumOfCards(command, num)
+    fun putScore(command: Int, score: Int) = onlineWordsRepository.putScore(command, score)
 
-    fun putScore(command: Int, score: Int) = onlineRepository.putScore(command, score)
+    fun putTurn(turn: Int) = onlineWordsRepository.putTurn(turn)
 
-    fun putTurn(turn: Int) = onlineRepository.putTurn(turn)
+    fun putColorNums(colors: List<Int>) = onlineWordsRepository.putColorNums(colors)
 
-    fun putColorNums(colors: List<Int>) = onlineRepository.putColorNums(colors)
-
-    fun putTeamsColors(numOfColors: Int) = onlineRepository.putTeamsColors(numOfColors)
+    fun putTeamsColors(numOfColors: Int) = onlineWordsRepository.putTeamsColors(numOfColors)
 
     fun putSelectedColor(selectedColors: List<Boolean>) =
-        onlineRepository.putSelectedColor(selectedColors)
+        onlineWordsRepository.putSelectedColor(selectedColors)
 
-    fun putWinner(winner: Int) = onlineRepository.putWinner(winner)
+    fun putWinner(winner: Int) = onlineWordsRepository.putWinner(winner)
 
     fun putSelectedColor(index: Int, state: Boolean) =
-        onlineRepository.putSelectedColor(index, state)
+        onlineWordsRepository.putSelectedColor(index, state)
 
-    private fun putComplexity(complexity: Int) = onlineRepository.putComplexity(complexity)
+    private fun putComplexity(complexity: Int) = onlineWordsRepository.putComplexity(complexity)
 
-    private fun putLang(lang: Int) = onlineRepository.putLang(lang)
+    private fun putLang(lang: Int) = onlineWordsRepository.putLang(lang)
 
-    private fun putSize(size: Int) = onlineRepository.putSize(size)
+    private fun putSize(size: Int) = onlineWordsRepository.putSize(size)
+
+    fun dropRoom(room: String, listener: () -> Unit) = onlineWordsRepository.dropRoom(room, listener)
 
     fun getWords() {
         viewModelScope.launch {
-            onlineRepository.getWords()
+            onlineWordsRepository.getWords()
                 .collect {
                     _words.value = it
                 }
@@ -101,7 +92,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getNumOfCards(command: Int) {
         viewModelScope.launch {
-            onlineRepository.getNumOfCards(command).collect {
+            onlineWordsRepository.getNumOfCards(command).collect {
                 if (command == 1) _firstNumOfCards.value = it
                 else _secondNumOfCards.value = it
             }
@@ -110,7 +101,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getScore(command: Int) {
         viewModelScope.launch {
-            onlineRepository.getScore(command).collect {
+            onlineWordsRepository.getScore(command).collect {
                 if (command == 1) _firstScore.value = it
                 else _secondScore.value = it
             }
@@ -119,7 +110,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getTurn() {
         viewModelScope.launch {
-            onlineRepository.getTurn().collect {
+            onlineWordsRepository.getTurn().collect {
                 _turn.value = it
             }
         }
@@ -127,7 +118,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getColorNums() {
         viewModelScope.launch {
-            onlineRepository.getColorNums().collect {
+            onlineWordsRepository.getColorNums().collect {
                 _colorNums.value = it
             }
         }
@@ -135,7 +126,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getTeamsColors() {
         viewModelScope.launch {
-            onlineRepository.getTeamsColors().collect {
+            onlineWordsRepository.getTeamsColors().collect {
                 _teamsColors.value = it
             }
         }
@@ -143,7 +134,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getWinner() {
         viewModelScope.launch {
-            onlineRepository.getWinner().collect {
+            onlineWordsRepository.getWinner().collect {
                 _winner.value = it
             }
         }
@@ -151,7 +142,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getSelectedColors() {
         viewModelScope.launch {
-            onlineRepository.getSelectedColors()
+            onlineWordsRepository.getSelectedColors()
                 .collect {
                     _selectedWords.value = it
                 }
@@ -160,7 +151,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getComplexity() {
         viewModelScope.launch {
-            onlineRepository.getComplexity()
+            onlineWordsRepository.getComplexity()
                 .collect {
                     _complexity.value = it
                 }
@@ -169,7 +160,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getLang() {
         viewModelScope.launch {
-            onlineRepository.getLang()
+            onlineWordsRepository.getLang()
                 .collect {
                     _lang.value = it
                 }
@@ -178,7 +169,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     fun getSize() {
         viewModelScope.launch {
-            onlineRepository.getSize()
+            onlineWordsRepository.getSize()
                 .collect {
                     _size.value = it
                 }
@@ -187,11 +178,11 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
 
     class FirebaseViewModelFactory(
         private val context: Context,
-        private val onlineRepository: OnlineRepository
+        private val onlineWordsRepository: OnlineWordsRepository
     ) :
         ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            FirebaseViewModel(onlineRepository) as T
+            FirebaseViewModel(onlineWordsRepository) as T
     }
 
     fun createGame(key: String, words: List<String>, firstNumOfCard: Int, secondNumOfCard: Int, colorsNums: List<Int>, numOfColors: Int, complexity: Int, lang: Int) {
@@ -228,6 +219,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
     private var getComplexityJob: Job? = null
     private var getLangJob: Job? = null
     private var getSizeJob: Job? = null
+    private var getRoomJob: Job? = null
 
     fun cleanUp() {
         getWordsJob?.cancel()
@@ -243,6 +235,7 @@ class FirebaseViewModel(private val onlineRepository: OnlineRepository) : ViewMo
         getComplexityJob?.cancel()
         getLangJob?.cancel()
         getSizeJob?.cancel()
+        getRoomJob?.cancel()
         job.cancel()
         coroutineScope.coroutineContext.cancelChildren()
     }

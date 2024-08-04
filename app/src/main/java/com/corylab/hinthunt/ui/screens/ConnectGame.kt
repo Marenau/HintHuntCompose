@@ -39,9 +39,13 @@ import com.corylab.hinthunt.data.qrcode.QRCodeAnalyzer
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.theme.Title
+import com.corylab.hinthunt.ui.viemodel.SharedPreferencesViewModel
 
 @Composable
-fun ConnectGame(navController: NavController) {
+fun ConnectGame(
+    navController: NavController,
+    spViewModel: SharedPreferencesViewModel
+) {
     val qrText = rememberSaveable {
         mutableStateOf("")
     }
@@ -93,7 +97,7 @@ fun ConnectGame(navController: NavController) {
                 }
             )
         } else if (qrText.value.count() == 6) {
-            if (!openConnectDialog.value) {
+            if (!openConnectDialog.value && spViewModel.getBoolean("internet_connection_dialog")) {
                 DialogWithChoice(
                     onDismiss = { openDialog.value = false },
                     title = stringResource(id = R.string.fragment_connect_game_online_game_title),

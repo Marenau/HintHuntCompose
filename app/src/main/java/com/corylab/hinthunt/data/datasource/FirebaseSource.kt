@@ -1,5 +1,6 @@
 package com.corylab.hinthunt.data.datasource
 
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,16 +24,11 @@ class FirebaseSource {
         room = StringBuilder().append("room_").append(key).toString()
     }
 
-    fun putKey(key: String) {
-        uniqueKey = key
-        room = StringBuilder().append("room_").append(key).toString()
-        database.child("rooms").child(room).child("room_id").setValue(key)
-    }
-
     fun putWords(words: List<String>) {
         size = words.size
         for (i in words.indices) {
-            database.child("rooms").child(room).child("words").child(i.toString()).setValue(words[i])
+            database.child("rooms").child(room).child("words").child(i.toString())
+                .setValue(words[i])
         }
     }
 
@@ -93,6 +89,10 @@ class FirebaseSource {
         database.child("rooms").child(room).child("words_size").setValue(size)
     }
 
+    fun dropRoom(room: String, listener: () -> Unit) {
+        database.child("rooms").child("room_$room").removeValue().addOnCanceledListener { listener() }
+    }
+
     fun getWords(): Flow<List<String>> = callbackFlow {
         val wordsRef = database.child("rooms").child(room).child("words")
         val listener = object : ValueEventListener {
@@ -117,7 +117,7 @@ class FirebaseSource {
         }
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val num = snapshot.getValue<Int>()!!
+                val num = snapshot.getValue<Int>() ?: 0
                 trySend(num)
             }
 
@@ -136,7 +136,7 @@ class FirebaseSource {
         }
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val score = snapshot.getValue<Int>()!!
+                val score = snapshot.getValue<Int>() ?: 0
                 trySend(score)
             }
 
@@ -153,7 +153,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val turn = snapshot.getValue<Int>()!!
+                val turn = snapshot.getValue<Int>() ?: 0
                 trySend(turn)
             }
 
@@ -161,7 +161,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         turnRef.addValueEventListener(listener)
         awaitClose { turnRef.removeEventListener(listener) }
     }
@@ -188,7 +187,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val teamsColors = snapshot.getValue<Int>()!!
+                val teamsColors = snapshot.getValue<Int>() ?: 0
                 trySend(teamsColors)
             }
 
@@ -196,7 +195,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         teamsColorsRef.addValueEventListener(listener)
         awaitClose { teamsColorsRef.removeEventListener(listener) }
     }
@@ -206,7 +204,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val winner = snapshot.getValue<Int>()!!
+                val winner = snapshot.getValue<Int>() ?: 0
                 trySend(winner)
             }
 
@@ -214,7 +212,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         winnerRef.addValueEventListener(listener)
         awaitClose { winnerRef.removeEventListener(listener) }
     }
@@ -241,7 +238,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val complexity = snapshot.getValue<Int>()!!
+                val complexity = snapshot.getValue<Int>() ?: 0
                 trySend(complexity)
             }
 
@@ -249,7 +246,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         complexityRef.addValueEventListener(listener)
         awaitClose { complexityRef.removeEventListener(listener) }
     }
@@ -259,7 +255,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lang = snapshot.getValue<Int>()!!
+                val lang = snapshot.getValue<Int>() ?: 0
                 trySend(lang)
             }
 
@@ -267,7 +263,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         langRef.addValueEventListener(listener)
         awaitClose { langRef.removeEventListener(listener) }
     }
@@ -277,7 +272,7 @@ class FirebaseSource {
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val size = snapshot.getValue<Int>()!!
+                val size = snapshot.getValue<Int>() ?: 0
                 trySend(size)
             }
 
@@ -285,7 +280,6 @@ class FirebaseSource {
                 close(error.toException())
             }
         }
-
         sizeRef.addValueEventListener(listener)
         awaitClose { sizeRef.removeEventListener(listener) }
     }

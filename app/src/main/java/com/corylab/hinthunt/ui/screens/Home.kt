@@ -1,5 +1,7 @@
 package com.corylab.hinthunt.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,8 +29,10 @@ import com.corylab.hinthunt.R
 import com.corylab.hinthunt.ui.theme.AppNameStyle
 import com.corylab.hinthunt.ui.theme.MainText
 
+
 @Composable
 fun Home(navController: NavController) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     Column(
@@ -68,7 +73,9 @@ fun Home(navController: NavController) {
         ButtonWithText(
             modifier = modifier,
             text = stringResource(id = R.string.fragment_home_rules),
-            onClick = {}
+            onClick = { val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Marenau/HintHuntCompose/wiki"
+            ))
+                context.startActivity(intent) }
         )
         ButtonWithText(
             modifier = modifier,

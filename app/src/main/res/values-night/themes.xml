@@ -3,7 +3,7 @@
     <style name="Theme.HintHuntCompose" parent="android:Theme.Material.Light.NoActionBar" />
 
     <style name="Theme.HintHuntCompose.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background_color_light</item>
+        <item name="windowSplashScreenBackground">@color/background_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/mini_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.HintHuntCompose</item>
     </style>

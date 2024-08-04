@@ -1,5 +1,6 @@
 package com.corylab.hinthunt.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.corylab.hinthunt.R
 import com.corylab.hinthunt.ui.dialog.DialogWithChoice
+import com.corylab.hinthunt.ui.dialog.DialogWithRemember
 import com.corylab.hinthunt.ui.theme.MainText
 import com.corylab.hinthunt.ui.theme.Title
 import com.corylab.hinthunt.ui.viemodel.FirebaseViewModel
@@ -135,48 +137,85 @@ fun CreateGame(
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
+    //TODO
     if (openDialog.value) {
-        DialogWithChoice(
-            onDismiss = { openDialog.value = false },
-            title = stringResource(id = R.string.fragment_create_game_online_game_title),
-            text = stringResource(id = R.string.fragment_create_game_online_game),
-            firstButtonText = stringResource(id = R.string.fragment_create_game_online_game_cancel),
-            firstButtonOnClick = { openDialog.value = false },
-            secondButtonText = stringResource(id = R.string.fragment_create_game_online_game_confirm),
-            secondButtonOnClick = {
-                openDialog.value = false
-                val uniqueKey = createOnlineGame(spViewModel)
-                spViewModel.putString("last_game_id", uniqueKey)
-                val words = wViewModel.getWords()
-                var firstNumOfCard = when (words.size) {
-                    18 -> 5
-                    24 -> 7
-                    else -> 9
-                }
-                var secondNumOfCard = when (words.size) {
-                    18 -> 5
-                    24 -> 7
-                    else -> 9
-                }
-                if (Random.nextInt(2) == 1) firstNumOfCard++ else secondNumOfCard++
-                val colorsNums =
-                    wViewModel.createColorsNums(words.size, firstNumOfCard, secondNumOfCard)
-                val numOfColors = spViewModel.getInt("teams_color")
-                val gameLang = spViewModel.getInt("language")
-                val gameComplexity = spViewModel.getInt("complexity")
-                fbViewModel.createGame(
-                    key = uniqueKey,
-                    words = words,
-                    firstNumOfCard = firstNumOfCard,
-                    secondNumOfCard = secondNumOfCard,
-                    colorsNums = colorsNums,
-                    numOfColors = numOfColors,
-                    complexity = gameComplexity,
-                    lang = gameLang
-                )
-                navController.navigate("leader_online/${uniqueKey}")
+        if (spViewModel.getBoolean("internet_connection_dialog")) {
+            DialogWithRemember(
+                onDismiss = { openDialog.value = false },
+                title = stringResource(id = R.string.fragment_create_game_online_game_title),
+                text = stringResource(id = R.string.fragment_create_game_online_game),
+                firstButtonText = stringResource(id = R.string.fragment_create_game_online_game_cancel),
+                firstButtonOnClick = { openDialog.value = false },
+                checkboxText = stringResource(id = R.string.fragment_create_game_show),
+                secondButtonText = stringResource(id = R.string.fragment_create_game_online_game_confirm),
+                secondButtonOnClick = {
+                    openDialog.value = false
+                    val uniqueKey = createOnlineGame(spViewModel)
+                    spViewModel.putString("last_game_id", uniqueKey)
+                    val words = wViewModel.getWords()
+                    var firstNumOfCard = when (words.size) {
+                        18 -> 5
+                        24 -> 7
+                        else -> 9
+                    }
+                    var secondNumOfCard = when (words.size) {
+                        18 -> 5
+                        24 -> 7
+                        else -> 9
+                    }
+                    if (Random.nextInt(2) == 1) firstNumOfCard++ else secondNumOfCard++
+                    val colorsNums =
+                        wViewModel.createColorsNums(words.size, firstNumOfCard, secondNumOfCard)
+                    val numOfColors = spViewModel.getInt("teams_color")
+                    val gameLang = spViewModel.getInt("language")
+                    val gameComplexity = spViewModel.getInt("complexity")
+                    fbViewModel.createGame(
+                        key = uniqueKey,
+                        words = words,
+                        firstNumOfCard = firstNumOfCard,
+                        secondNumOfCard = secondNumOfCard,
+                        colorsNums = colorsNums,
+                        numOfColors = numOfColors,
+                        complexity = gameComplexity,
+                        lang = gameLang
+                    )
+                    navController.navigate("leader_online/${uniqueKey}")
+                },
+                checkboxAction = { spViewModel.putBoolean("internet_connection_dialog", false) }
+            )
+        } else {
+            openDialog.value = false
+            val uniqueKey = createOnlineGame(spViewModel)
+            spViewModel.putString("last_game_id", uniqueKey)
+            val words = wViewModel.getWords()
+            var firstNumOfCard = when (words.size) {
+                18 -> 5
+                24 -> 7
+                else -> 9
             }
-        )
+            var secondNumOfCard = when (words.size) {
+                18 -> 5
+                24 -> 7
+                else -> 9
+            }
+            if (Random.nextInt(2) == 1) firstNumOfCard++ else secondNumOfCard++
+            val colorsNums =
+                wViewModel.createColorsNums(words.size, firstNumOfCard, secondNumOfCard)
+            val numOfColors = spViewModel.getInt("teams_color")
+            val gameLang = spViewModel.getInt("language")
+            val gameComplexity = spViewModel.getInt("complexity")
+            fbViewModel.createGame(
+                key = uniqueKey,
+                words = words,
+                firstNumOfCard = firstNumOfCard,
+                secondNumOfCard = secondNumOfCard,
+                colorsNums = colorsNums,
+                numOfColors = numOfColors,
+                complexity = gameComplexity,
+                lang = gameLang
+            )
+            navController.navigate("leader_online/${uniqueKey}")
+        }
     }
 
     Column(
@@ -602,7 +641,14 @@ fun CreateGame(
 
 fun createOnlineGame(viewModel: SharedPreferencesViewModel): String {
     val uniqueKey = generateUniqueKey()
-    viewModel.putString("online_game", uniqueKey)
+    val currentTime = System.currentTimeMillis()
+    val onlineGame = viewModel.getString("online_game")
+    val newOnlineGame = if (onlineGame == "empty") {
+        "$uniqueKey.$currentTime"
+    } else {
+        "$onlineGame; $uniqueKey.$currentTime"
+    }
+    viewModel.putString("online_game", newOnlineGame)
     return uniqueKey
 }
 

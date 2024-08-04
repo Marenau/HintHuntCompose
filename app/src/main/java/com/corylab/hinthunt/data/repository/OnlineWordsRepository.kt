@@ -1,16 +1,11 @@
 package com.corylab.hinthunt.data.repository
 
-import android.content.Context
 import com.corylab.hinthunt.data.datasource.FirebaseSource
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.ValueEventListener
 
-class OnlineRepository {
+class OnlineWordsRepository {
     private val firebaseSource = FirebaseSource()
 
     fun initiateKey(key: String) = firebaseSource.initiateKey(key)
-
-    fun putKey(key: String) = firebaseSource.putKey(key)
 
     fun putWords(words: List<String>) = firebaseSource.putWords(words)
 
@@ -35,6 +30,8 @@ class OnlineRepository {
     fun putSize(size: Int) = firebaseSource.putSize(size)
 
     fun putSelectedColor(index: Int, state: Boolean) = firebaseSource.putSelectedColor(index, state)
+
+    fun dropRoom(room: String, listener: () -> Unit) = firebaseSource.dropRoom(room, listener)
 
     fun getWords() = firebaseSource.getWords()
 
