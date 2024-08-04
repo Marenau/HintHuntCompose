@@ -2,6 +2,7 @@ package com.corylab.hinthunt.ui.dialog
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,13 +13,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -211,15 +218,23 @@ fun DialogWithChoice(
 }
 
 @Composable
-fun DialogWithProgress(
+fun DialogWithRemember(
+    onDismiss: () -> Unit = {},
     title: String,
-    text: String
+    text: String,
+    firstButtonText: String,
+    secondButtonText: String,
+    checkboxText: String,
+    firstButtonOnClick: () -> Unit,
+    secondButtonOnClick: () -> Unit,
+    checkboxAction: () -> Unit
 ) {
-    Dialog(onDismissRequest = {}) {
+    val checkboxState = rememberSaveable { mutableStateOf(false) }
+    Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier.wrapContentSize(),
             shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -237,8 +252,111 @@ fun DialogWithProgress(
                     style = MainText,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Checkbox(
+                        checked = checkboxState.value,
+                        colors = CheckboxDefaults.colors(
+                            uncheckedColor = MaterialTheme.colorScheme.secondary,
+                            checkedColor = MaterialTheme.colorScheme.secondary,
+                            checkmarkColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        onCheckedChange = {checkboxState.value = it},
+                    )
+                    Text(
+                        text = checkboxText,
+                        style = MainText,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterVertically),
+                        textAlign = TextAlign.Left,
+                        fontSize = 20.sp
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    val modifier = Modifier
+                        .weight(1F)
+                        .padding(start = 8.dp, top = 16.dp, bottom = 8.dp, end = 8.dp)
+                    val colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                    Button(
+                        onClick = firstButtonOnClick,
+                        modifier = modifier,
+                        shape = RoundedCornerShape(6.dp),
+                        colors = colors
+                    ) {
+                        Text(
+                            text = firstButtonText,
+                            style = MainText,
+                            fontSize = 20.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            if (checkboxState.value) {
+                                checkboxAction()
+                                secondButtonOnClick()
+                            } else {
+                                secondButtonOnClick()
+                            }
+                        },
+                        modifier = modifier,
+                        shape = RoundedCornerShape(6.dp),
+                        colors = colors
+                    ) {
+                        Text(
+                            text = secondButtonText,
+                            style = MainText,
+                            fontSize = 20.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogWithProgress(
+    title: String,
+    text: String
+) {
+    Dialog(onDismissRequest = {}) {
+        Card(
+            modifier = Modifier.wrapContentSize(),
+            shape = RoundedCornerShape(6.dp),
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.dark_gray))
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = title,
+                    style = MainText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Left,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = text,
+                    style = MainText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Left,
                     fontSize = 20.sp
                 )
                 CircularProgressIndicator(

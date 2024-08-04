@@ -91,7 +91,7 @@ fun Navigation(applicationContext: Context) {
                 fbViewModel = viewModel(
                     factory = FirebaseViewModel.FirebaseViewModelFactory(
                         applicationContext,
-                        HintHunt.onlineRepository
+                        HintHunt.onlineWordsRepository
                     )
                 ),
                 wViewModel = viewModel(
@@ -120,7 +120,7 @@ fun Navigation(applicationContext: Context) {
                 fbViewModel = viewModel(
                     factory = FirebaseViewModel.FirebaseViewModelFactory(
                         applicationContext,
-                        HintHunt.onlineRepository
+                        HintHunt.onlineWordsRepository
                     )
                 ),
                 data = data
@@ -138,7 +138,7 @@ fun Navigation(applicationContext: Context) {
                 fbViewModel = viewModel(
                     factory = FirebaseViewModel.FirebaseViewModelFactory(
                         applicationContext,
-                        HintHunt.onlineRepository
+                        HintHunt.onlineWordsRepository
                     )
                 ),
                 wViewModel = viewModel(
@@ -151,7 +151,7 @@ fun Navigation(applicationContext: Context) {
         }
         composable("settings") {
             Settings(
-                mViewModel = viewModel(
+                spViewModel = viewModel(
                     factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
                         applicationContext,
                         HintHunt.offlineRepository
@@ -163,7 +163,15 @@ fun Navigation(applicationContext: Context) {
             Home(navController)
         }
         composable("connect_game") {
-            ConnectGame(navController)
+            ConnectGame(
+                navController,
+                spViewModel = viewModel(
+                    factory = SharedPreferencesViewModel.SharedPreferencesModelFactory(
+                        applicationContext,
+                        HintHunt.offlineRepository
+                    )
+                )
+            )
         }
         composable("authors") {
             Authors(navController)

@@ -21,4 +21,8 @@ class SharedPreferencesSource(context: Context) {
     fun putInt(key: String, value: Int) = editor.putInt(key, value).apply()
 
     fun getInt(key: String, defaultValue: Int = 0) = sharedPreferences.getInt(key, defaultValue)
+
+    fun putBoolean(key: String, value: Boolean) = editor.putBoolean(key, value).apply()
+
+    fun getBoolean(key: String, defaultValue: Boolean = false) = sharedPreferences.getBoolean(key, defaultValue)
 }

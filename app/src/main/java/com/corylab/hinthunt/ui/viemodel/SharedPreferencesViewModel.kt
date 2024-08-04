@@ -15,6 +15,10 @@ class SharedPreferencesViewModel(private val offlineRepository: OfflineRepositor
 
     fun putString(key: String, text: String) = offlineRepository.putString(key, text)
 
+    fun getBoolean(key: String) = offlineRepository.getBoolean(key)
+
+    fun putBoolean(key: String, bool: Boolean) = offlineRepository.putBoolean(key, bool)
+
     class SharedPreferencesModelFactory(
         private val context: Context,
         private val offlineRepository: OfflineRepository

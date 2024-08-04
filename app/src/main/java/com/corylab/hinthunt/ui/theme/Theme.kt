@@ -22,8 +22,6 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = White, //text and border
     onPrimary = BorderDark,
     surface = DarkGray
-
-
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -33,20 +31,21 @@ private val LightColorScheme = lightColorScheme(
     onSurface = FontLightTheme, //text and border
     onPrimary = BorderLight,
     surface = CardsColorLight
-
 )
 
 @Composable
 fun HintHuntComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    theme: Int = 0,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme =
+        if ((theme == 0 && darkTheme) || theme == 2) {
+            DarkColorScheme
+        } else {
+            LightColorScheme
+        }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

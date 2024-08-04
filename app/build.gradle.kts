@@ -76,4 +76,5 @@ dependencies {
     implementation ("androidx.camera:camera-lifecycle:1.3.1")
     implementation ("androidx.camera:camera-view:1.4.0-alpha03")
     implementation ("com.google.mlkit:barcode-scanning:17.1.0")
+    implementation ("androidx.core:core-splashscreen:1.0.1")
 }

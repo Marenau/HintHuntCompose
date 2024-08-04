@@ -41,6 +41,7 @@
     <string name="fragment_create_game_cranberries_in_moss">Cranberries in moss</string>
     <string name="fragment_create_game_online_game_title">Attention!</string>
     <string name="fragment_create_game_online_game">An internet connection is required to play online.</string>
+    <string name="fragment_create_game_show">Don\'t show it anymore</string>
     <string name="fragment_create_game_online_game_confirm">Confirm</string>
     <string name="fragment_create_game_online_game_cancel">Cancel</string>
     <string name="fragment_create_game_create">Create</string>

@@ -97,6 +97,7 @@
     <string name="fragment_authors_nikita_novichkov">Никита Новичков</string>
     <string name="fragment_create_game_online_game_title">Внимание!</string>
     <string name="fragment_create_game_online_game">Для онлайн-игры необходимо подключение к Интернету.</string>
+    <string name="fragment_create_game_show">Больше не показывать</string>
     <string name="fragment_create_game_online_game_confirm">Продолжить</string>
     <string name="fragment_create_game_online_game_cancel">Назад</string>
     <string name="fragment_connect_game_online_game_title">Внимание!</string>

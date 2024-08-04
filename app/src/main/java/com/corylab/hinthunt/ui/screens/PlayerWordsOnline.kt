@@ -73,17 +73,19 @@ fun PlayerWordsOnline(
     fbViewModel.initiateKey(uniqueKey.value)
 
     val words = fbViewModel.words.collectAsState()
+    val firstNumOfCard = fbViewModel.firstNumOfCards.collectAsState()
+    val secondNumOfCard = fbViewModel.secondNumOfCards.collectAsState()
+    val firstScore = fbViewModel.firstScore.collectAsState()
+    val secondScore = fbViewModel.secondScore.collectAsState()
+    val turn = fbViewModel.turn.collectAsState()
+    val winner = fbViewModel.winner.collectAsState()
+    val colorsNums = fbViewModel.colorNums.collectAsState()
+    val selectedColors = fbViewModel.selectedWords.collectAsState()
+    val numOfColors = fbViewModel.teamsColors.collectAsState()
+
 
     val quantity =
         if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 6
-
-    val firstNumOfCard = fbViewModel.firstNumOfCards.collectAsState()
-    val secondNumOfCard = fbViewModel.secondNumOfCards.collectAsState()
-
-    val firstScore = fbViewModel.firstScore.collectAsState()
-    val secondScore = fbViewModel.secondScore.collectAsState()
-
-    val turn = fbViewModel.turn.collectAsState()
 
     val wordTurn = stringResource(id = R.string.fragment_player_turn)
     val turnText = if (turn.value == 1) {
@@ -100,12 +102,7 @@ fun PlayerWordsOnline(
         }
     }
 
-    val winner = fbViewModel.winner.collectAsState()
-
-    val colorsNums = fbViewModel.colorNums.collectAsState()
-
     val neutralColor = colorResource(id = R.color.neutral)
-    val numOfColors = fbViewModel.teamsColors.collectAsState()
 
     val (firstTeamColor, secondTeamColor) = when (numOfColors.value) {
         0 -> Pair(
@@ -138,8 +135,6 @@ fun PlayerWordsOnline(
             colorResource(id = R.color.cranberries_in_moss_color2)
         )
     }
-
-    val selectedColors = fbViewModel.selectedWords.collectAsState()
 
     val colorMap = mapOf(
         0 to neutralColor,

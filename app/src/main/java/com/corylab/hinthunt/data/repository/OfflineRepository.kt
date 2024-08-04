@@ -16,6 +16,10 @@ class OfflineRepository(application: Context) {
 
     fun putString(key: String, text: String) = sharedPreferencesSource.putString(key, text)
 
+    fun getBoolean(key: String) = sharedPreferencesSource.getBoolean(key)
+
+    fun putBoolean(key: String, bool: Boolean) = sharedPreferencesSource.putBoolean(key, bool)
+
     fun createColorsNums(size: Int, firstNumOfCard: Int, secondNumOfCard: Int) = wordCardSource.createColorsNums(size, firstNumOfCard, secondNumOfCard)
 
     private fun getSize() = getInt("size")

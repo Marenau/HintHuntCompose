@@ -2,9 +2,12 @@ package com.corylab.hinthunt.ui.screens
 
 import android.app.LocaleManager
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.os.LocaleList
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.NightMode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,11 +43,14 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(mViewModel: SharedPreferencesViewModel) {
+fun Settings(spViewModel: SharedPreferencesViewModel) {
     val scrollState = rememberScrollState()
 
-    val language = mViewModel.getInt("language")
-    val theme = mViewModel.getInt("theme")
+    val language = spViewModel.getInt("language")
+    val theme = spViewModel.getInt("theme")
+
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
 
     Column(
         modifier = Modifier
@@ -78,6 +84,7 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                 )
 
                 val schemes = listOf(
+                    stringResource(id = R.string.fragment_settings_language_system),
                     stringResource(id = R.string.fragment_settings_color_scheme_light_chip),
                     stringResource(id = R.string.fragment_settings_color_scheme_dark_chip)
                 )
@@ -93,20 +100,15 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                             selected = (text == selectedOption),
                             onClick = {
                                 onOptionSelected(text)
-                                setTheme(
-                                    when (text) {
-                                        schemes[0] -> AppCompatDelegate.MODE_NIGHT_NO
-                                        schemes[1] -> AppCompatDelegate.MODE_NIGHT_YES
-                                        else -> AppCompatDelegate.MODE_NIGHT_YES
-                                    }
-                                )
-                                mViewModel.putInt(
+                                spViewModel.putInt(
                                     "theme",
                                     when (text) {
                                         schemes[0] -> 0
-                                        else -> 1
+                                        schemes[1] -> 1
+                                        else -> 2
                                     }
                                 )
+                                activity!!.recreate()
                             },
                             shape = RoundedCornerShape(6.dp),
                             modifier = Modifier
@@ -165,7 +167,7 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
                             selected = (languageCode == selectedLanguage),
                             onClick = {
                                 onLanguageSelected(languageCode)
-                                mViewModel.putInt("language", if (languageCode == "en") 0 else 1)
+                                spViewModel.putInt("language", if (languageCode == "en") 0 else 1)
                                 localeSelection(
                                     context = context,
                                     localeTag = Locale(languageCode).toLanguageTag()
@@ -205,14 +207,9 @@ fun Settings(mViewModel: SharedPreferencesViewModel) {
     }
 }
 
-fun setTheme(theme: Int) {
-    AppCompatDelegate.setDefaultNightMode(theme)
-}
-
 fun localeSelection(context: Context, localeTag: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        context.getSystemService(LocaleManager::class.java).applicationLocales =
-            LocaleList.forLanguageTags(localeTag)
+        context.getSystemService(LocaleManager::class.java).applicationLocales = LocaleList.forLanguageTags(localeTag)
     } else {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(localeTag)
